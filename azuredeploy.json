@@ -428,7 +428,7 @@
       }
     },
     {
-      "name" : "infranode",
+      "name" : "infranode1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -443,7 +443,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "infranode"
+            "value" : "infranode1"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
@@ -490,6 +490,268 @@
           },
           "dnsName" : {
             "value" : "master2"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "master3",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriMaster')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "master2"
+          },
+          "dnsName" : {
+            "value" : "master2"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "infranode2",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriInfranode')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "infranode2"
+          },
+          "sa" : {
+            "value" : "[variables('infranodeStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('infranodeSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('infranodeVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "bastion",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriMaster')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "bastion"
+          },
+          "dnsName" : {
+            "value" : "bastion"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "router1",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriMaster')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "router1"
+          },
+          "dnsName" : {
+            "value" : "router1"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "router2",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriMaster')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "router2"
+          },
+          "dnsName" : {
+            "value" : "router2"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
