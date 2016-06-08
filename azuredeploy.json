@@ -721,7 +721,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
