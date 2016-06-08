@@ -528,11 +528,11 @@
   "outputs" : {
     "Openshift Webconsole" : {
       "type" : "string",
-      "value" : "[concat('https://', reference('master').outputs.fqdn.value, ':8443')]"
+      "value" : "[concat('https://', reference('master1').outputs.fqdn.value, ':8443')]"
     },
     "Openshift Master ssh" : {
       "type" : "string",
-      "value" : "[concat('ssh -A ', reference('master').outputs.pip.value)]"
+      "value" : "[concat('ssh -A ', reference('master1').outputs.pip.value)]"
     },
     "Openshift Router Public IP" : {
       "type" : "string",
