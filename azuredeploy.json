@@ -489,7 +489,7 @@
             "value" : "master2"
           },
           "dnsName" : {
-            "value" : "[parameters('masterDNSName')]"
+            "value" : "master2"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
