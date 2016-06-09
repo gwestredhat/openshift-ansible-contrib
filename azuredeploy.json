@@ -622,7 +622,7 @@
       }
     },
     {
-      "name" : "bastion.gsw",
+      "name" : "bastion",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -640,7 +640,7 @@
             "value" : "bastion"
           },
           "dnsName" : {
-            "value" : "bastion"
+            "value" : "bastion.gsw1"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
