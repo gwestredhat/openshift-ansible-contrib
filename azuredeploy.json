@@ -215,6 +215,13 @@
       "metadata" : {
         "description" : "The size of the each Node Virtual Machine."
       }
+    },
+    "dnspostfix" : {
+      "type" : "string",
+      "defaultValue" : "c1",
+      "metadata" : {
+        "description" : "Value added to dns names to make them unique. Cluster number ie c1 or c10 is a good example."
+      }
     }
   },
   "variables" : {
@@ -622,7 +629,7 @@
       }
     },
     {
-      "name" : "[concat('bastion',parameters('postfix'))]",
+      "name" : "[concat('bastion',parameters('dnspostfix'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
