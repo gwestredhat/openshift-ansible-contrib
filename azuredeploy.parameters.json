@@ -1,24 +1,27 @@
-﻿{
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "adminUsername": {
-      "value": ""
+{
+  "$schema" : "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion" : "1.0.0.0",
+  "parameters" : {
+    "adminUsername" : {
+      "value" : ""
     },
-    "adminPassword": {
-      "value": ""
+    "adminPassword" : {
+      "value" : ""
     },
-    "sshKeyData": {
-      "value": ""
+    "sshKeyData" : {
+      "value" : ""
     },
-    "masterDnsName": {
-      "value": ""
+    "masterDnsName" : {
+      "value" : ""
     },
-    "numberOfNodes": {
-      "value": 3
+    "numberOfNodes" : {
+      "value" : 3
     },
-    "image": {
-      "value": "centos"
+    "image" : {
+      "value" : "centos"
+    },
+    "dnspostfix" : {
+      "value" : ""
     }
   }
 }

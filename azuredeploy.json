@@ -622,7 +622,7 @@
       }
     },
     {
-      "name" : "bastion",
+      "name" : "[concat('bastion',parameters('postfix'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
