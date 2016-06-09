@@ -647,7 +647,7 @@
             "value" : "bastion"
           },
           "dnsName" : {
-            "value" : "bastion.gsw1"
+            "value" : "[concat('bastion',parameters('dnspostfix'))]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
