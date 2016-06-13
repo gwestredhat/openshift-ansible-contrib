@@ -644,10 +644,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "bastion"
+            "value" : "\"name\" : [concat('bastion',resourceGroup().name)] ,\n"
           },
           "dnsName" : {
-            "value" : "[concat('bastion',parameters('dnspostfix'))]"
+            "value" : "[concat('bastion',resourceGroup().name)]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
