@@ -258,7 +258,8 @@
       "offer" : "RHEL",
       "sku" : "7.2",
       "version" : "latest"
-    }
+    },
+    "resname" : "[resourceGroup().name]"
   },
   "resources" : [
     {
@@ -629,7 +630,7 @@
       }
     },
     {
-      "name" : "[concat('bastion',resourceGroup().name)]",
+      "name" : "[concat('bastion',variables('resname')]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -644,10 +645,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "\"name\" : [concat('bastion',resourceGroup().name)] ,\n"
+            "value" : "[concat('bastion',variables('resname'))]"
           },
           "dnsName" : {
-            "value" : "[concat('bastion',resourceGroup().name)]"
+            "value" : "[concat('bastion',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
