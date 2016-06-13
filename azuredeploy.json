@@ -629,7 +629,7 @@
       }
     },
     {
-      "name" : "[concat('bastion',deployment().name)]",
+      "name" : "[concat('bastion',resourceGroup().name)]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
