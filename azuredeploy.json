@@ -629,7 +629,7 @@
       }
     },
     {
-      "name" : "[concat('bastion',parameters('dnspostfix'))]",
+      "name" : "[concat('bastion',deployment().name)]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
