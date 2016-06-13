@@ -381,7 +381,7 @@
       }
     },
     {
-      "name" : "master1",
+      "name" : "[concat('master1',variables('resname'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -397,7 +397,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "master1"
+            "value" : "[concat('master1',variables('resname'))]"
           },
           "dnsName" : {
             "value" : "[parameters('masterDNSName')]"
@@ -436,7 +436,7 @@
       }
     },
     {
-      "name" : "infranode1",
+      "name" : "[concat('infranode1',variables('resname'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -451,7 +451,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "infranode1"
+            "value" : "[concat('infranode1',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
@@ -478,7 +478,7 @@
       }
     },
     {
-      "name" : "master2",
+      "name" : "[concat('master2',variables('resname'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -494,10 +494,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "master2"
+            "value" : "[concat('master2',variables('resname'))]"
           },
           "dnsName" : {
-            "value" : "master2"
+            "value" : "[concat('master2',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -533,7 +533,7 @@
       }
     },
     {
-      "name" : "master3",
+      "name" : "[concat('master3',variables('resname'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -549,10 +549,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "master3"
+            "value" : "[concat('master3',variables('resname'))]"
           },
           "dnsName" : {
-            "value" : "master3"
+            "value" : "[concat('master3',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -588,7 +588,7 @@
       }
     },
     {
-      "name" : "infranode2",
+      "name" : "[concat('infranode2',variables('resname'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -603,7 +603,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "infranode2"
+            "value" : "[concat('infranode2',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
