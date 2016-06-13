@@ -630,7 +630,7 @@
       }
     },
     {
-      "name" : "[concat('bastion',variables('resname')]",
+      "name" : "[concat('bastion',variables('resname'))]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
