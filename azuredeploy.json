@@ -381,7 +381,7 @@
       }
     },
     {
-      "name" : "[concat('master1',variables('resname'))]",
+      "name" : "master1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -436,7 +436,7 @@
       }
     },
     {
-      "name" : "[concat('infranode1',variables('resname'))]",
+      "name" : "infranode1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -478,7 +478,7 @@
       }
     },
     {
-      "name" : "[concat('master2',variables('resname'))]",
+      "name" : "master2",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -533,7 +533,7 @@
       }
     },
     {
-      "name" : "[concat('master3',variables('resname'))]",
+      "name" : "master3",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -588,7 +588,7 @@
       }
     },
     {
-      "name" : "[concat('infranode2',variables('resname'))]",
+      "name" : "infranode2",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -630,7 +630,7 @@
       }
     },
     {
-      "name" : "[concat('bastion',variables('resname'))]",
+      "name" : "bastion",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
