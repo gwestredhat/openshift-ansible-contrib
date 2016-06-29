@@ -397,7 +397,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "master1"
+            "value" : "[concat('master1',variables('resname'))]"
+          },
+          "dnsName" : {
+            "value" : "[parameters('masterDNSName')]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -422,6 +425,9 @@
           },
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -490,6 +496,9 @@
           "vmName" : {
             "value" : "[concat('master2',variables('resname'))]"
           },
+          "dnsName" : {
+            "value" : "[concat('master2',variables('resname'))]"
+          },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
           },
@@ -514,6 +523,9 @@
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
           },
+          "routerExtIP" : {
+            "value" : "[reference('infranode1').outputs.pip.value]"
+          },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
           }
@@ -537,10 +549,16 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "master3"
+            "value" : "[concat('master3',variables('resname'))]"
+          },
+          "dnsName" : {
+            "value" : "[concat('master3',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
           },
           "vmSize" : {
             "value" : "[parameters('masterVMSize')]"
@@ -559,6 +577,9 @@
           },
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -582,7 +603,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "infranode2"
+            "value" : "[concat('infranode2',variables('resname'))]"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
@@ -624,7 +645,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "bastion"
+            "value" : "[concat('bastion',variables('resname'))]"
           },
           "dnsName" : {
             "value" : "[concat('bastion',variables('resname'))]"
@@ -653,6 +674,9 @@
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
           },
+          "routerExtIP" : {
+            "value" : "[reference('infranode1').outputs.pip.value]"
+          },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
           }
@@ -678,7 +702,7 @@
             "value" : "router1"
           },
           "dnsName" : {
-            "value" : "[concat('router1',variables('resname'))]"
+            "value" : "router1"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -703,6 +727,9 @@
           },
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -729,7 +756,7 @@
             "value" : "router2"
           },
           "dnsName" : {
-            "value" : "[concat('router1',variables('resname'))]"
+            "value" : "router2"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -754,6 +781,9 @@
           },
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
