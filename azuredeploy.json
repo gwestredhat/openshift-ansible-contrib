@@ -43,14 +43,14 @@
         "centos",
         "rhel"
       ],
-      "defaultValue" : "rhel",
+      "defaultValue" : "centos",
       "metadata" : {
         "description" : "OS to use. Centos or Redhat Enterprise Linux"
       }
     },
     "masterVMSize" : {
       "type" : "string",
-      "defaultValue" : "Standard_DS3",
+      "defaultValue" : "Standard_D3_v2",
       "allowedValues" : [
         "Standard_A0",
         "Standard_A1",
@@ -106,7 +106,7 @@
     },
     "infranodeVMSize" : {
       "type" : "string",
-      "defaultValue" : "Standard_DS3",
+      "defaultValue" : "Standard_D2_v2",
       "allowedValues" : [
         "Standard_A0",
         "Standard_A1",
@@ -162,7 +162,7 @@
     },
     "nodeVMSize" : {
       "type" : "string",
-      "defaultValue" : "Standard_DS3",
+      "defaultValue" : "Standard_D2_v2",
       "allowedValues" : [
         "Standard_A0",
         "Standard_A1",
@@ -215,13 +215,6 @@
       "metadata" : {
         "description" : "The size of the each Node Virtual Machine."
       }
-    },
-    "dnspostfix" : {
-      "type" : "string",
-      "defaultValue" : "c1",
-      "metadata" : {
-        "description" : "Value added to dns names to make them unique. Cluster number ie c1 or c10 is a good example."
-      }
     }
   },
   "variables" : {
@@ -258,8 +251,7 @@
       "offer" : "RHEL",
       "sku" : "7.2",
       "version" : "latest"
-    },
-    "resname" : "[resourceGroup().name]"
+    }
   },
   "resources" : [
     {
@@ -381,13 +373,13 @@
       }
     },
     {
-      "name" : "[concat('master1',variables('resname'))]",
+      "name" : "master1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode1')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -397,7 +389,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('master1',variables('resname'))]"
+            "value" : "master1"
           },
           "dnsName" : {
             "value" : "[parameters('masterDNSName')]"
@@ -427,7 +419,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode1').outputs.pip.value]"
+            "value" : "[reference('infranode').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -436,7 +428,7 @@
       }
     },
     {
-      "name" : "[concat('infranode1',variables('resname'))]",
+      "name" : "infranode1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -451,7 +443,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('infranode1',variables('resname'))]"
+            "value" : "infranode1"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
@@ -478,13 +470,13 @@
       }
     },
     {
-      "name" : "[concat('master2',variables('resname'))]",
+      "name" : "master2",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode1')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -494,10 +486,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('master2',variables('resname'))]"
+            "value" : "master2"
           },
           "dnsName" : {
-            "value" : "[concat('master2',variables('resname'))]"
+            "value" : "master2"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -524,7 +516,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode1').outputs.pip.value]"
+            "value" : "[reference('infranode').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -533,13 +525,13 @@
       }
     },
     {
-      "name" : "[concat('master3',variables('resname'))]",
+      "name" : "master3",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode1')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -549,10 +541,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('master3',variables('resname'))]"
+            "value" : "master2"
           },
           "dnsName" : {
-            "value" : "[concat('master3',variables('resname'))]"
+            "value" : "master2"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -579,7 +571,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode1').outputs.pip.value]"
+            "value" : "[reference('infranode').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -588,7 +580,7 @@
       }
     },
     {
-      "name" : "[concat('infranode2',variables('resname'))]",
+      "name" : "infranode2",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -603,7 +595,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('infranode2',variables('resname'))]"
+            "value" : "infranode2"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
@@ -630,12 +622,13 @@
       }
     },
     {
-      "name" : "[concat('bastion',variables('resname'))]",
+      "name" : "bastion",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -645,10 +638,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('bastion',variables('resname'))]"
+            "value" : "bastion"
           },
           "dnsName" : {
-            "value" : "[concat('bastion',variables('resname'))]"
+            "value" : "bastion"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -675,7 +668,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode1').outputs.pip.value]"
+            "value" : "[reference('infranode').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -689,7 +682,8 @@
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -729,7 +723,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode1').outputs.pip.value]"
+            "value" : "[reference('infranode').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -743,7 +737,8 @@
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -783,7 +778,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode1').outputs.pip.value]"
+            "value" : "[reference('infranode').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -803,7 +798,7 @@
     },
     "Openshift Router Public IP" : {
       "type" : "string",
-      "value" : "[reference('infranode1').outputs.pip.value]"
+      "value" : "[reference('infranode').outputs.pip.value]"
     }
   }
 }
