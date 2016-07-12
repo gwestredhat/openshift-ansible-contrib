@@ -5,7 +5,17 @@ PASSWORD=$2
 HOSTNAME=$3
 NODECOUNT=$4
 ROUTEREXTIP=$5
+RHNUSERNAME=$6
+RHNPASSWORD=$7
+RHNPOOLID=$7
 
+subscription-manager unregister --username=$RHNUSERNAME
+subscription-manager register --username $RHNUSERNAME
+subscription-manager attach --pool=$RHNPOOLID
+subscription-manager repos --disable="*"
+subscription-manager repos     --enable="rhel-7-server-rpms"     --enable="rhel-7-server-extras-rpms"
+subscription-manager repos     --enable="rhel-7-server-ose-3.2-rpms"
+yum -y install atomic-openshift-utils
 #yum -y update
 yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
 yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
@@ -31,10 +41,13 @@ masters
 nodes
 
 [OSEv3:vars]
+rhn_user_name=${RHNUSERNAME}
+rhn_password=${RHNPASSWORD}
+rhn_pool_id=${RHNPOOLID}
 ansible_ssh_user=${USERNAME}
 ansible_sudo=true
 debug_level=2
-deployment_type=origin
+deployment_type=enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
