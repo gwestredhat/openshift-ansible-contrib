@@ -43,6 +43,15 @@
       "metadata" : {
         "description" : "imageReference object that should be used to create the virtual machine"
       }
+    },
+    "RHNUserName" : {
+      "type" : "string"
+    },
+    "RHNPassword" : {
+      "type" : "securestring"
+    },
+    "SubscriptionPoolId" : {
+      "type" : "string"
     }
   },
   "variables" : {
