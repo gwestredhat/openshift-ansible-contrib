@@ -215,6 +215,26 @@
       "metadata" : {
         "description" : "The size of the each Node Virtual Machine."
       }
+    },
+    "RHNUserName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "metadata" : {
+        "description" : "Redhat Subscription User Name or Email Address"
+      }
+    },
+    "RHNPassword" : {
+      "type" : "securestring",
+      "metadata" : {
+        "description" : "Redhat Subscription Password"
+      }
+    },
+    "SubscriptionPoolId" : {
+      "type" : "string",
+      "minLength" : 1,
+      "metadata" : {
+        "description" : "Pool ID of the redhat subscritpion to use"
+      }
     }
   },
   "variables" : {
