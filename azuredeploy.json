@@ -445,13 +445,13 @@
             "value" : "[variables(parameters('image'))]"
           },
           "RHNUserName" : {
-            "value" : "[parameters('RHNUserName')]"
+            "value" : "[variables(parameters('RHNUserName'))]"
           },
           "RHNPassword" : {
-            "value" : "[parameters('RHNPassword')]"
+            "value" : "[variables(parameters('RHNPassword'))]"
           },
           "SubscriptionPoolId" : {
-            "value" : "[parameters('SubscriptionPoolId')]"
+            "value" : "[variables(parameters('SubscriptionPoolId'))]"
           }
         }
       }
