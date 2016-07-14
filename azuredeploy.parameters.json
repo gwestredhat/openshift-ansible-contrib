@@ -19,15 +19,6 @@
     },
     "image" : {
       "value" : "rhel"
-    },
-    "RHNUserName" : {
-      "value" : ""
-    },
-    "RHNPassword" : {
-      "value" : ""
-    },
-    "SubscriptionPoolId" : {
-      "value" : ""
     }
   }
 }
