@@ -7,10 +7,11 @@ NODECOUNT=$4
 ROUTEREXTIP=$5
 RHNUSERNAME=$6
 RHNPASSWORD=$7
-RHNPOOLID=$7
+RHNPOOLID=$8
 
-subscription-manager unregister --username=$RHNUSERNAME
-subscription-manager register --username $RHNUSERNAME
+
+subscription-manager unregister 
+subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
 subscription-manager repos --disable="*"
 subscription-manager repos     --enable="rhel-7-server-rpms"     --enable="rhel-7-server-extras-rpms"
@@ -44,11 +45,13 @@ nodes
 rhn_user_name=${RHNUSERNAME}
 rhn_password=${RHNPASSWORD}
 rhn_pool_id=${RHNPOOLID}
-ansible_ssh_user=${USERNAME}
-ansible_sudo=true
 debug_level=2
 deployment_type=enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+ansible_sudo=true
+ansible_ssh_user=${USERNAME}
+remote_user=${USERNAME}
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
 openshift_use_dnsmasq=False
@@ -58,7 +61,7 @@ master openshift_public_hostname=${HOSTNAME}
 
 [nodes]
 master
-node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+node[01:0${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
@@ -74,3 +77,5 @@ oadm router --selector=region=infra
 EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh
+/home/${USERNAME}/openshift-install.sh
+
