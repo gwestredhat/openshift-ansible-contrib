@@ -8,9 +8,6 @@
     "adminPassword" : {
       "value" : ""
     },
-    "sshKeyData" : {
-      "value" : ""
-    },
     "masterDnsName" : {
       "value" : ""
     },
@@ -28,7 +25,12 @@
     },
     "SubscriptionPoolId" : {
       "value" : ""
+    },
+    "sshKeyData" : {
+      "value" : ""
+    },
+    "sshPrivateData" : {
+      "value" : ""
     }
   }
 }
-

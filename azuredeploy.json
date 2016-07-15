@@ -15,12 +15,6 @@
         "description" : "User password for the Openshift Webconsole"
       }
     },
-    "sshKeyData" : {
-      "type" : "string",
-      "metadata" : {
-        "description" : "SSH rsa public key file as a string."
-      }
-    },
     "masterDnsName" : {
       "type" : "string",
       "minLength" : 1,
@@ -235,6 +229,18 @@
       "metadata" : {
         "description" : "Pool ID of the redhat subscritpion to use"
       }
+    },
+    "sshKeyData" : {
+      "type" : "string",
+      "metadata" : {
+        "description" : "SSH rsa public key file as a string."
+      }
+    },
+    "sshPrivateData" : {
+      "type" : "string",
+      "metadata" : {
+        "description" : "SSH rsa private key file as a string."
+      }
     }
   },
   "variables" : {
@@ -429,9 +435,6 @@
           "adminPassword" : {
             "value" : "[parameters('adminPassword')]"
           },
-          "sshKeyData" : {
-            "value" : "[parameters('sshKeyData')]"
-          },
           "numberOfNodes" : {
             "value" : "[parameters('numberOfNodes')]"
           },
@@ -452,6 +455,12 @@
           },
           "SubscriptionPoolId" : {
             "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshKeyData')]"
           }
         }
       }
