@@ -8,8 +8,13 @@ ROUTEREXTIP=$5
 RHNUSERNAME=$6
 RHNPASSWORD=$7
 RHNPOOLID=$8
+SSHPUBLICDATA=$9
+SSHPRIVATEDATA=$10
 
 
+mkdir -p /home/$USERNAME/.ssh
+echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
+echo $SSHPUBLICDATA > /home/$USERNAME/.ssh/id_rsa.pub
 subscription-manager unregister 
 subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
