@@ -178,14 +178,14 @@
           "fileUris" : [
             "[concat(parameters('baseTemplateUrl'), 'master.sh')]"
           ],
-          "commandToExecute" : "[ concat('sh master.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat(parameters('vmName'), 'pip')).dnsSettings.fqdn, ' ', padLeft(parameters('numberOfNodes'), 2, '0'), ' ', parameters('routerExtIP'),' ', parameters('RHNUserName'), ' ', parameters('RHNPassword'),' ', parameters('SubscriptionPoolId'),parameters('sshKeyData'),' ',parameters(sshPrivateData) ) ]"
+          "commandToExecute" : "[ concat('sh master.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat(parameters('vmName'), 'pip')).dnsSettings.fqdn, ' ', padLeft(parameters('numberOfNodes'), 2, '0'), ' ', parameters('routerExtIP'),' ', parameters('RHNUserName'), ' ', parameters('RHNPassword'),' ', parameters('SubscriptionPoolId'),parameters('sshKeyData'),' ',parameters(sshPrivateData)  ]"
         }
       }
     },
     {
       "type" : "Microsoft.Network/networkSecurityGroups",
-      "name" : "[concat(parameters('vmName'), 'nsg')]",
       "tags" : {
+        "name" : "[concat(parameters('vmName'), 'nsg')]",
         "displayName" : "NetworkSecurityGroup"
       },
       "apiVersion" : "[variables('apiVersion')]",
