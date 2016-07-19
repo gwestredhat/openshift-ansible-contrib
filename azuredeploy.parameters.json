@@ -28,7 +28,9 @@
     },
     "SubscriptionPoolId" : {
       "value" : ""
+    },
+    "sshPrivateData" : {
+      "value" : ""
     }
   }
 }
-
