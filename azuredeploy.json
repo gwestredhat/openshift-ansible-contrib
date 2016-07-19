@@ -460,7 +460,7 @@
             "value" : "[parameters('sshKeyData')]"
           },
           "sshPrivateData" : {
-            "value" : "[parameters('sshKeyData')]"
+            "value" : "[parameters('sshPrivateData')]"
           }
         }
       }
