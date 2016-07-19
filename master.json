@@ -23,6 +23,12 @@
     "adminPassword" : {
       "type" : "securestring"
     },
+    "sshKeyData" : {
+      "type" : "string",
+      "metadata" : {
+        "description" : "SSH rsa public key file as a string."
+      }
+    },
     "numberOfNodes" : {
       "type" : "int"
     },
@@ -46,18 +52,6 @@
     },
     "SubscriptionPoolId" : {
       "type" : "string"
-    },
-    "sshKeyData" : {
-      "type" : "string",
-      "metadata" : {
-        "description" : "SSH rsa public key file as a string."
-      }
-    },
-    "sshPrivateData" : {
-      "type" : "string",
-      "metadata" : {
-        "description" : "SSH rsa public key file as a string."
-      }
     }
   },
   "variables" : {
@@ -178,14 +172,14 @@
           "fileUris" : [
             "[concat(parameters('baseTemplateUrl'), 'master.sh')]"
           ],
-          "commandToExecute" : "[ concat('sh master.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat(parameters('vmName'), 'pip')).dnsSettings.fqdn, ' ', padLeft(parameters('numberOfNodes'), 2, '0'), ' ', parameters('routerExtIP'),' ', parameters('RHNUserName'), ' ', parameters('RHNPassword'),' ', parameters('SubscriptionPoolId'), ' ', parameters('sshKeyData'), ' ', parameters('sshPrivateData') ) ]\""
+          "commandToExecute" : "[ concat('sh master.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat(parameters('vmName'), 'pip')).dnsSettings.fqdn, ' ', padLeft(parameters('numberOfNodes'), 2, '0'), ' ', parameters('routerExtIP'),' ', parameters('RHNUserName'), ' ', parameters('RHNPassword'),' ', parameters('SubscriptionPoolId') ) ]"
         }
       }
     },
     {
       "type" : "Microsoft.Network/networkSecurityGroups",
+      "name" : "[concat(parameters('vmName'), 'nsg')]",
       "tags" : {
-        "name" : "[concat(parameters('vmName'), 'nsg')]",
         "displayName" : "NetworkSecurityGroup"
       },
       "apiVersion" : "[variables('apiVersion')]",
