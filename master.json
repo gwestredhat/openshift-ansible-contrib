@@ -52,12 +52,6 @@
     },
     "SubscriptionPoolId" : {
       "type" : "string"
-    },
-    "sshPrivateData" : {
-      "type" : "string",
-      "metadata" : {
-        "description" : "SSH rsa private key file as a string."
-      }
     }
   },
   "variables" : {
