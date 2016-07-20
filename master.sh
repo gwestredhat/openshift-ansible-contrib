@@ -100,8 +100,24 @@ oadm registry --selector=region=infra
 oadm router --selector=region=infra
 EOF
 
+cat <<EOF > /home/${USERNAME}/.ansible.cfg
+[defaults]
+host_key_checking = False
+EOF
+chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
+  
+cat <<EOF > /root/.ansible.cfg
+[defaults]
+host_key_checking = False
+EOF
+
+
+
+chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
 chmod 755 /home/${USERNAME}/openshift-install.sh
-/home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
+sudo -u ${USERNAME} /home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
+
+
 
 exit 0
 
