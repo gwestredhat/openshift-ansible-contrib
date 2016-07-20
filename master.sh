@@ -66,7 +66,7 @@ master
 
 [nodes]
 master
-node[001:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
