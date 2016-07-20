@@ -27,7 +27,7 @@ yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash
 yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
 sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 yum -y --enablerepo=epel install ansible1.9 pyOpenSSL
-git clone https://github.com/openshift/openshift-ansible /opt/openshift-ansible
+#git clone https://github.com/openshift/openshift-ansible /opt/openshift-ansible
 yum -y install docker
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
                                                                                          
@@ -60,27 +60,48 @@ remote_user=${USERNAME}
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
 openshift_use_dnsmasq=False
+openshift_public_hostname=${HOSTNAME}
+
 
 [masters]
-master openshift_public_hostname=${HOSTNAME}
+master 
 
 [nodes]
 master
-node[01:0${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+node[001:0${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
 mkdir -p /etc/origin/master
 htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 
+cat <<EOF > /home/${USERNAME}/subscribe.yml
+---
+- hosts: nodes
+  vars:
+    description: "Subscribe OSE"
+  tasks:
+  - name: check connection
+    ping:
+  - name: Get rid of old subs
+    redhat_subscription: state=absent
+  - name: register hosts
+    redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} pool=${RHNPOOLID} autosubscribe=true
+  - name: disable all repos
+    command: subscription-manager repos --disable="*"
+  - name: enable selected repos
+    command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
+EOF
+
 
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook /opt/openshift-ansible/playbooks/byo/config.yml
+ansible-playbook /home/${USERNAME}/subscribe.yml
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 oadm registry --selector=region=infra
 oadm router --selector=region=infra
 EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh
-/home/${USERNAME}/openshift-install.sh
+/home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
 
