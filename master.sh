@@ -9,12 +9,15 @@ RHNUSERNAME=$6
 RHNPASSWORD=$7
 RHNPOOLID=$8
 SSHPUBLICDATA=$9
-SSHPRIVATEDATA=$10
+# SSHPRIVATEDATA=$10
 
 
 mkdir -p /home/$USERNAME/.ssh
-echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
+#echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
 echo $SSHPUBLICDATA > /home/$USERNAME/.ssh/id_rsa.pub
+chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
+chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
+
 subscription-manager unregister 
 subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
@@ -22,12 +25,7 @@ subscription-manager repos --disable="*"
 subscription-manager repos     --enable="rhel-7-server-rpms"     --enable="rhel-7-server-extras-rpms"
 subscription-manager repos     --enable="rhel-7-server-ose-3.2-rpms"
 yum -y install atomic-openshift-utils
-#yum -y update
 yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
-yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
-sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
-yum -y --enablerepo=epel install ansible1.9 pyOpenSSL
-#git clone https://github.com/openshift/openshift-ansible /opt/openshift-ansible
 yum -y install docker
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
                                                                                          
@@ -104,4 +102,6 @@ EOF
 
 chmod 755 /home/${USERNAME}/openshift-install.sh
 /home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
+
+exit 0
 
