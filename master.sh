@@ -49,7 +49,7 @@ rhn_user_name=${RHNUSERNAME}
 rhn_password=${RHNPASSWORD}
 rhn_pool_id=${RHNPOOLID}
 debug_level=2
-deployment_type=enterprise
+deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
 ansible_sudo=true
@@ -66,7 +66,7 @@ master
 
 [nodes]
 master
-node[001:0${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+node[001:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
 
