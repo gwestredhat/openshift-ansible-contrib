@@ -115,7 +115,7 @@ EOF
 
 chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
 chmod 755 /home/${USERNAME}/openshift-install.sh
-sudo -u ${USERNAME} /home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
+su - ${USERNAME} -c /home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
 
 
 
