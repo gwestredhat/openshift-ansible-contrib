@@ -9,14 +9,16 @@ RHNUSERNAME=$6
 RHNPASSWORD=$7
 RHNPOOLID=$8
 SSHPUBLICDATA=$9
-# SSHPRIVATEDATA=$10
+SSHPRIVATEDATA=$10
 
 
 mkdir -p /home/$USERNAME/.ssh
-#echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
+echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
 echo $SSHPUBLICDATA > /home/$USERNAME/.ssh/id_rsa.pub
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
 chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
+chown $USERNAME /home/$USERNAME/.ssh/id_rsa
+chmod 600 /home/$USERNAME/.ssh/id_rsa
 
 subscription-manager unregister 
 subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD

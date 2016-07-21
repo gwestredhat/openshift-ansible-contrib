@@ -235,6 +235,12 @@
       "metadata" : {
         "description" : "Pool ID of the redhat subscritpion to use"
       }
+    },
+    "sshPrivateData" : {
+      "type" : "string",
+      "metadata" : {
+        "description" : "SSH rsa public key file as a string."
+      }
     }
   },
   "variables" : {
@@ -452,6 +458,9 @@
           },
           "SubscriptionPoolId" : {
             "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
           }
         }
       }
