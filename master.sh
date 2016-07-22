@@ -20,6 +20,14 @@ chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa
 chmod 600 /home/$USERNAME/.ssh/id_rsa
 
+mkdir -p /root/.ssh
+echo $SSHPRIVATEDATA > /root/.ssh/id_rsa
+echo $SSHPUBLICDATA > /root/.ssh/id_rsa.pub
+chown root /root/.ssh/id_rsa.pub
+chmod 600 /root/.ssh/id_rsa.pub
+chown root /root/.ssh/id_rsa
+chmod 600 /root/.ssh/id_rsa
+
 subscription-manager unregister 
 subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
