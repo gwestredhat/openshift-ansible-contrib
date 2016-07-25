@@ -11,10 +11,11 @@ RHNPOOLID=$8
 SSHPUBLICDATA=$9
 SSHPRIVATEDATA=$10
 
+ps -ef | grep master.sh > cmdline.out
 
 mkdir -p /home/$USERNAME/.ssh
-echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
 echo $SSHPUBLICDATA > /home/$USERNAME/.ssh/id_rsa.pub
+echo $SSHPRIVATEDATA > /home/$USERNAME/.ssh/id_rsa
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
 chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa
