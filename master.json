@@ -56,7 +56,7 @@
     "sshPrivateData" : {
       "type" : "string",
       "metadata" : {
-        "description" : "SSH rsa public key file as a string."
+        "description" : "SSH rsa private key file as a string."
       }
     }
   },
@@ -178,7 +178,7 @@
           "fileUris" : [
             "[concat(parameters('baseTemplateUrl'), 'master.sh')]"
           ],
-          "commandToExecute" : "[ concat('sh master.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat(parameters('vmName'), 'pip')).dnsSettings.fqdn, ' ', padLeft(parameters('numberOfNodes'), 2, '0'), ' ', parameters('routerExtIP'),' ', parameters('RHNUserName'), ' ', parameters('RHNPassword'),' ', parameters('SubscriptionPoolId'), ' ', parameters('sshKeyData'), ' ', parameters('sshPrivateData') ) ]\n"
+          "commandToExecute" : "[ concat('sh master.sh ', parameters('adminUsername'), ' ', parameters('adminPassword'), ' ', reference(concat(parameters('vmName'), 'pip')).dnsSettings.fqdn, ' ', padLeft(parameters('numberOfNodes'), 2, '0'), ' ', parameters('routerExtIP'),' ', parameters('RHNUserName'), ' ', parameters('RHNPassword'),' ', parameters('SubscriptionPoolId'), ' ', parameters('sshKeyData'), ' ', parameters('sshPrivateData') ) ]"
         }
       }
     },
