@@ -14,16 +14,16 @@ SSHPRIVATEDATA=$10
 ps -ef | grep master.sh > cmdline.out
 
 mkdir -p /home/$USERNAME/.ssh
-echo $SSHPUBLICDATA | base64 --d >  /home/$USERNAME/.ssh/id_rsa.pub
-echo $SSHPRIVATEDATA | base64 --d >  /home/$USERNAME/.ssh/id_rsa
+echo $SSHPUBLICDATA  >  /home/$USERNAME/.ssh/id_rsa.pub
+echo $SSHPRIVATEDATA >  /home/$USERNAME/.ssh/id_rsa
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
 chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa
 chmod 600 /home/$USERNAME/.ssh/id_rsa
 
 mkdir -p /root/.ssh
-echo $SSHPRIVATEDATA | base64 --d >  /root/.ssh/id_rsa
-echo $SSHPUBLICDATA | base64 --d  >  /root/.ssh/id_rsa.pub
+echo $SSHPRIVATEDATA  >  /root/.ssh/id_rsa
+echo $SSHPUBLICDATA   >  /root/.ssh/id_rsa.pub
 chown root /root/.ssh/id_rsa.pub
 chmod 600 /root/.ssh/id_rsa.pub
 chown root /root/.ssh/id_rsa
