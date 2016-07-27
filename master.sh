@@ -125,8 +125,12 @@ host_key_checking = False
 EOF
 
 
-ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
+cd /home/${USERNAME}
 
+sleep 60
+ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
+ansible all --module-name=ping > ansible1.out
+ansible all --module-name=ping > ansible2.out
 
 chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
 chmod 755 /home/${USERNAME}/openshift-install.sh
