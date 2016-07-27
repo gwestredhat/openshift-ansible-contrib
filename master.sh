@@ -10,11 +10,13 @@ RHNPASSWORD=$7
 RHNPOOLID=$8
 SSHPRIVATEDATA=$9
 SSHPUBLICDATA=$10
+SSHPUBLICDATA2=$11
+SSHPUBLICDATA3=$12
 
 ps -ef | grep master.sh > cmdline.out
 
 mkdir -p /home/$USERNAME/.ssh
-echo $SSHPUBLICDATA  >  /home/$USERNAME/.ssh/id_rsa.pub
+echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$USERNAME/.ssh/id_rsa.pub
 echo $SSHPRIVATEDATA | base64 --d > /home/$USERNAME/.ssh/id_rsa
 chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
 chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
@@ -23,7 +25,7 @@ chmod 600 /home/$USERNAME/.ssh/id_rsa
 
 mkdir -p /root/.ssh
 echo $SSHPRIVATEDATA | base64 --d > /root/.ssh/id_rsa
-echo $SSHPUBLICDATA   >  /root/.ssh/id_rsa.pub
+echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3   >  /root/.ssh/id_rsa.pub
 chown root /root/.ssh/id_rsa.pub
 chmod 600 /root/.ssh/id_rsa.pub
 chown root /root/.ssh/id_rsa
@@ -122,6 +124,8 @@ cat <<EOF > /root/.ansible.cfg
 host_key_checking = False
 EOF
 
+
+ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
 
 
 chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
