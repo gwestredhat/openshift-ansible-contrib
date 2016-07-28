@@ -1,6 +1,6 @@
 # RedHat Openshift Enterprise cluster on Azure
 
-When creating the RedHat Openshift Origin cluster on Azure, you will need a SSH RSA key for access. 
+When creating the RedHat Openshift Enterprise Cluster on Azure, you will need a SSH RSA key for access. 
 
 ## SSH Key Generation
 
@@ -23,6 +23,7 @@ When creating the RedHat Openshift Origin cluster on Azure, you will need a SSH 
 ```powershell
 New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/glennswest/azure-openshift/master/azuredeploy.json
 ```
+
 
 
 ## Parameters
