@@ -1,4 +1,4 @@
-# RedHat Openshift Origin cluster on Azure
+# RedHat Openshift Enterprise cluster on Azure
 
 When creating the RedHat Openshift Origin cluster on Azure, you will need a SSH RSA key for access. 
 
@@ -24,29 +24,6 @@ When creating the RedHat Openshift Origin cluster on Azure, you will need a SSH 
 New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/glennswest/azure-openshift/master/azuredeploy.json
 ```
 
-## Install Openshift Origin with Ansible
-
-You must use SSH Agentforwarding. The Installation is based on [Openshift Ansible](https://github.com/openshift/openshift-ansible). The lastest repository has been checked out on the master into the directory */opt/openshift-ansible/* and a minimal configuration file was created at */etc/ansible/hosts* for [Openshift Origin](https://github.com/openshift/origin).
-
-
-### Bash or Cygwin Terminal
-
-```bash
-user@localmachine:~$ eval `ssh-agent`
-user@localmachine:~$ ssh-add
-user@localmachine:~$ ssh -A <MasterIP>
-[adminUsername@master ~]$ ./openshift-install.sh
-```
-
-### Putty on Windows
-
-To login on the Master please refer to the [Agent forwarding HowTo](https://github.com/Azure/azure-quickstart-templates/blob/master/101-acs-mesos/docs/SSHKeyManagement.md#key-management-and-agent-forwarding-with-windows-pageant) for Putty using Pageant.
-
-```bash  
-[adminUsername@master ~]$ ./openshift-install.sh
-```
-
-------
 
 ## Parameters
 ### Input Parameters
@@ -73,4 +50,4 @@ To login on the Master please refer to the [Agent forwarding HowTo](https://gith
 
 ------
 
-This template deploys a RedHat Openshift Origin cluster on Azure.
+This template deploys a RedHat Openshift Enterprise cluster on Azure.
