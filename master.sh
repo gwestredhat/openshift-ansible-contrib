@@ -94,6 +94,12 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   tasks:
   - name: check connection
     ping:
+  - name: Get rid of rhui repos
+    file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
+  - name: Get rid of rhui Load balancers
+    file: path=/etc/yum.repos.d/rhui-load-balancers state=absent
+  - name: remove the RHUI package
+    yum: name=RHEL7 state=absent
   - name: Get rid of old subs
     redhat_subscription: state=absent
   - name: register hosts
