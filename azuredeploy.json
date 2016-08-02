@@ -401,7 +401,7 @@
       }
     },
     {
-      "name" : "master",
+      "name" : "master1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -417,10 +417,10 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "master"
+            "value" : "master1"
           },
           "dnsName" : {
-            "value" : "[parameters('masterDNSName')]"
+            "value" : "[concat(resourceGroup().name,'m1')]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
@@ -575,16 +575,150 @@
           }
         }
       }
+    },
+    {
+      "name" : "master2",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriMaster')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "master2"
+          },
+          "dnsName" : {
+            "value" : "[concat(resourceGroup().name,'m2')]"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          },
+          "RHNUserName" : {
+            "value" : "[parameters('RHNUserName')]"
+          },
+          "RHNPassword" : {
+            "value" : "[parameters('RHNPassword')]"
+          },
+          "SubscriptionPoolId" : {
+            "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "master3",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriMaster')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "master3"
+          },
+          "dnsName" : {
+            "value" : "[concat(resourceGroup().name,'m3')]"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          },
+          "RHNUserName" : {
+            "value" : "[parameters('RHNUserName')]"
+          },
+          "RHNPassword" : {
+            "value" : "[parameters('RHNPassword')]"
+          },
+          "SubscriptionPoolId" : {
+            "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
+          }
+        }
+      }
     }
   ],
   "outputs" : {
     "Openshift Webconsole" : {
       "type" : "string",
-      "value" : "[concat('https://', reference('master').outputs.fqdn.value, ':8443')]"
+      "value" : "[concat('https://', reference('master1').outputs.fqdn.value, ':8443')]"
     },
     "Openshift Master ssh" : {
       "type" : "string",
-      "value" : "[concat('ssh -A ', reference('master').outputs.pip.value)]"
+      "value" : "[concat('ssh -A ', reference('bastion').outputs.pip.value)]"
     },
     "Openshift Router Public IP" : {
       "type" : "string",
