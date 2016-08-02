@@ -521,15 +521,15 @@
       "properties" : {
         "mode" : "Incremental",
         "templateLink" : {
-          "uri" : "[variables('baseVMachineTemplateUriBastion')]\n",
+          "uri" : "[variables('baseVMachineTemplateUriBastion')]",
           "contentVersion" : "1.0.0.0"
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat(resourceGroup().name,\"b\")]\n"
+            "value" : "[concat(resourceGroup().name,'b')]"
           },
           "dnsName" : {
-            "value" : "[concat(resourceGroup().name,\"b\")]"
+            "value" : "[concat(resourceGroup().name,'b')]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
