@@ -13,7 +13,7 @@ SSHPUBLICDATA=$10
 SSHPUBLICDATA2=$11
 SSHPUBLICDATA3=$12
 
-ps -ef | grep master.sh > cmdline.out
+ps -ef | grep bastion.sh > cmdline.out
 
 mkdir -p /home/$USERNAME/.ssh
 echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$USERNAME/.ssh/id_rsa.pub
@@ -75,7 +75,9 @@ openshift_public_hostname=${HOSTNAME}
 
 
 [masters]
-master 
+master1
+master2
+master3
 
 [nodes]
 master
