@@ -526,7 +526,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat(resourceGroup().name,'b')]"
+            "value" : "bastion"
           },
           "dnsName" : {
             "value" : "[concat(resourceGroup().name,'b')]"
