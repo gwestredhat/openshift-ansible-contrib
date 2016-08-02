@@ -52,73 +52,6 @@ systemctl enable docker
 systemctl start docker
 
 
-cat <<EOF > /etc/ansible/hosts
-[OSEv3:children]
-masters
-nodes
-
-[OSEv3:vars]
-rhn_user_name=${RHNUSERNAME}
-rhn_password=${RHNPASSWORD}
-rhn_pool_id=${RHNPOOLID}
-debug_level=2
-deployment_type=openshift-enterprise
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-
-ansible_sudo=true
-ansible_ssh_user=${USERNAME}
-remote_user=${USERNAME}
-
-openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
-openshift_use_dnsmasq=False
-openshift_public_hostname=${HOSTNAME}
-
-
-[masters]
-master 
-
-[nodes]
-master
-node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-EOF
-
-mkdir -p /etc/origin/master
-htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
-
-cat <<EOF > /home/${USERNAME}/subscribe.yml
----
-- hosts: nodes
-  vars:
-    description: "Subscribe OSE"
-  tasks:
-  - name: check connection
-    ping:
-  - name: Get rid of rhui repos
-    file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
-  - name: Get rid of rhui Load balancers
-    file: path=/etc/yum.repos.d/rhui-load-balancers state=absent
-  - name: remove the RHUI package
-    yum: name=RHEL7 state=absent
-  - name: Get rid of old subs
-    redhat_subscription: state=absent
-  - name: register hosts
-    redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} pool=${RHNPOOLID} autosubscribe=true
-  - name: disable all repos
-    command: subscription-manager repos --disable="*"
-  - name: enable selected repos
-    command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
-EOF
-
-
-cat <<EOF > /home/${USERNAME}/openshift-install.sh
-export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook /home/${USERNAME}/subscribe.yml
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-oadm registry --selector=region=infra
-oadm router --selector=region=infra
-EOF
-
 cat <<EOF > /home/${USERNAME}/.ansible.cfg
 [defaults]
 host_key_checking = False
@@ -130,16 +63,4 @@ cat <<EOF > /root/.ansible.cfg
 host_key_checking = False
 EOF
 
-
-cd /home/${USERNAME}
-
-sleep 60
-ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
-ansible all --module-name=ping > ansible1.out
-ansible all --module-name=ping > ansible2.out
-
-chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
-chmod 755 /home/${USERNAME}/openshift-install.sh
-/home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
-exit 0
 

@@ -277,7 +277,9 @@
       "offer" : "RHEL",
       "sku" : "7.2",
       "version" : "latest"
-    }
+    },
+    "baseVMachineTemplateUriBastion" : "[concat(variables('baseTemplateUrl'), 'bastion.json')]",
+    "baseVMachineTemplateUriLogging" : "[concat(variables('baseTemplateUrl'), 'logging.json')]"
   },
   "resources" : [
     {
@@ -503,6 +505,73 @@
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "bastion",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriBastion')]\n",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "[concat(resourceGroup().name,\"b\")]\n"
+          },
+          "dnsName" : {
+            "value" : "[concat(resourceGroup().name,\"b\")]"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          },
+          "RHNUserName" : {
+            "value" : "[parameters('RHNUserName')]"
+          },
+          "RHNPassword" : {
+            "value" : "[parameters('RHNPassword')]"
+          },
+          "SubscriptionPoolId" : {
+            "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
           }
         }
       }
