@@ -13,7 +13,6 @@ SSHPUBLICDATA=$10
 SSHPUBLICDATA2=$11
 SSHPUBLICDATA3=$12
 
-ps -ef | grep master.sh > cmdline.out
 
 mkdir -p /home/$USERNAME/.ssh
 echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$USERNAME/.ssh/id_rsa.pub
@@ -86,60 +85,8 @@ EOF
 mkdir -p /etc/origin/master
 htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 
-cat <<EOF > /home/${USERNAME}/subscribe.yml
----
-- hosts: nodes
-  vars:
-    description: "Subscribe OSE"
-  tasks:
-  - name: check connection
-    ping:
-  - name: Get rid of rhui repos
-    file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
-  - name: Get rid of rhui Load balancers
-    file: path=/etc/yum.repos.d/rhui-load-balancers state=absent
-  - name: remove the RHUI package
-    yum: name=RHEL7 state=absent
-  - name: Get rid of old subs
-    redhat_subscription: state=absent
-  - name: register hosts
-    redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} pool=${RHNPOOLID} autosubscribe=true
-  - name: disable all repos
-    command: subscription-manager repos --disable="*"
-  - name: enable selected repos
-    command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
-EOF
-
-
-cat <<EOF > /home/${USERNAME}/openshift-install.sh
-export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook /home/${USERNAME}/subscribe.yml
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-oadm registry --selector=region=infra
-oadm router --selector=region=infra
-EOF
-
-cat <<EOF > /home/${USERNAME}/.ansible.cfg
-[defaults]
-host_key_checking = False
-EOF
-chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
-  
-cat <<EOF > /root/.ansible.cfg
-[defaults]
-host_key_checking = False
-EOF
-
-
-cd /home/${USERNAME}
-
-sleep 60
-ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
-ansible all --module-name=ping > ansible1.out
-ansible all --module-name=ping > ansible2.out
-
-chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
-chmod 755 /home/${USERNAME}/openshift-install.sh
-/home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
-exit 0
+yum -y install cockpit
+systemctl enable --now cockpit.socket
+firewall-cmd --add-service=cockpit
+firewall-cmd --add-service=cockpit --permanent
 
