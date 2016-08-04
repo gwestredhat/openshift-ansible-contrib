@@ -355,6 +355,72 @@
       }
     },
     {
+      "name" : "logging",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriLogging')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "logging"
+          },
+          "dnsName" : {
+            "value" : "[concat(resourceGroup().name,'log')]"
+          },
+          "sa" : {
+            "value" : "[variables('masterStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('masterSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('masterVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "numberOfNodes" : {
+            "value" : "[parameters('numberOfNodes')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "routerExtIP" : {
+            "value" : "[reference('infranode').outputs.pip.value]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          },
+          "RHNUserName" : {
+            "value" : "[parameters('RHNUserName')]"
+          },
+          "RHNPassword" : {
+            "value" : "[parameters('RHNPassword')]"
+          },
+          "SubscriptionPoolId" : {
+            "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
+          }
+        }
+      }
+    },
+    {
       "name" : "[concat('nodeSet', copyindex())]",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
@@ -364,7 +430,8 @@
       },
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('nodeStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('nodeStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -473,7 +540,8 @@
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -663,72 +731,6 @@
           },
           "dnsName" : {
             "value" : "[concat(resourceGroup().name,'m3')]"
-          },
-          "sa" : {
-            "value" : "[variables('masterStorageName')]"
-          },
-          "subnetRef" : {
-            "value" : "[variables('masterSubnetRef')]"
-          },
-          "vmSize" : {
-            "value" : "[parameters('masterVMSize')]"
-          },
-          "adminUsername" : {
-            "value" : "[parameters('adminUsername')]"
-          },
-          "adminPassword" : {
-            "value" : "[parameters('adminPassword')]"
-          },
-          "sshKeyData" : {
-            "value" : "[parameters('sshKeyData')]"
-          },
-          "numberOfNodes" : {
-            "value" : "[parameters('numberOfNodes')]"
-          },
-          "baseTemplateUrl" : {
-            "value" : "[variables('baseTemplateUrl')]"
-          },
-          "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
-          },
-          "imageReference" : {
-            "value" : "[variables(parameters('image'))]"
-          },
-          "RHNUserName" : {
-            "value" : "[parameters('RHNUserName')]"
-          },
-          "RHNPassword" : {
-            "value" : "[parameters('RHNPassword')]"
-          },
-          "SubscriptionPoolId" : {
-            "value" : "[parameters('SubscriptionPoolId')]"
-          },
-          "sshPrivateData" : {
-            "value" : "[parameters('sshPrivateData')]"
-          }
-        }
-      }
-    },
-    {
-      "name" : "logging",
-      "type" : "Microsoft.Resources/deployments",
-      "apiVersion" : "2013-03-01",
-      "dependsOn" : [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
-      ],
-      "properties" : {
-        "mode" : "Incremental",
-        "templateLink" : {
-          "uri" : "[variables('baseVMachineTemplateUriLogging')]",
-          "contentVersion" : "1.0.0.0"
-        },
-        "parameters" : {
-          "vmName" : {
-            "value" : "logging"
-          },
-          "dnsName" : {
-            "value" : "[concat(resourceGroup().name,'log')]"
           },
           "sa" : {
             "value" : "[variables('masterStorageName')]"
