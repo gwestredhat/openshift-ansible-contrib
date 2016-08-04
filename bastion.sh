@@ -80,7 +80,9 @@ master2
 master3
 
 [nodes]
-master
+master1
+master2
+master3
 node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
