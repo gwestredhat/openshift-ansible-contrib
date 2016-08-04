@@ -540,8 +540,7 @@
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]"
       ],
       "properties" : {
         "mode" : "Incremental",
