@@ -228,7 +228,7 @@
               "sourceAddressPrefix" : "*",
               "destinationAddressPrefix" : "*",
               "access" : "Allow",
-              "priority" : 2000,
+              "priority" : 3000,
               "direction" : "Inbound"
             }
           }

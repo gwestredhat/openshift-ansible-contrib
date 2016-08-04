@@ -474,7 +474,8 @@
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -583,7 +584,8 @@
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -650,7 +652,8 @@
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode')]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -716,7 +719,8 @@
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
         "mode" : "Incremental",
