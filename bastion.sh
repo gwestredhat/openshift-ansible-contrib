@@ -137,7 +137,7 @@ EOF
 
 cd /home/${USERNAME}
 
-sleep 60
+sleep 120
 ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
 ansible all --module-name=ping > ansible1.out
 ansible all --module-name=ping > ansible2.out
