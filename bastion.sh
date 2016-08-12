@@ -73,11 +73,14 @@ openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io
 openshift_use_dnsmasq=False
 openshift_public_hostname=${HOSTNAME}
 
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=${HOSTNAME}
+openshift_master_cluster_public_hostname=${HOSTNAME}
 
 [masters]
-master1
-master2
-master3
+master1 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
+master2 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
+master3 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
 
 [nodes]
 master1
