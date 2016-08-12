@@ -78,14 +78,14 @@ openshift_master_cluster_hostname=${HOSTNAME}
 openshift_master_cluster_public_hostname=${HOSTNAME}
 
 [masters]
-master1 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
-master2 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
-master3 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
-
-[nodes]
 master1
 master2
 master3
+
+[nodes]
+master1 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
+master2 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
+master3 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
 node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 EOF
@@ -115,6 +115,8 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     command: subscription-manager repos --disable="*"
   - name: enable selected repos
     command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
+  - name: Update all hosts
+    command: yum -y update
 EOF
 
 
