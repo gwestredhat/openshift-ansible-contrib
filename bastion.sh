@@ -55,6 +55,7 @@ systemctl start docker
 cat <<EOF > /etc/ansible/hosts
 [OSEv3:children]
 masters
+etcd
 nodes
 
 [OSEv3:vars]
@@ -78,6 +79,11 @@ openshift_master_cluster_hostname=${HOSTNAME}
 openshift_master_cluster_public_hostname=${HOSTNAME}
 
 [masters]
+master1 openshift_node_labels="{'role': 'master'}"
+master2 openshift_node_labels="{'role': 'master'}"
+master3 openshift_node_labels="{'role': 'master'}"
+
+[etcd]
 master1
 master2
 master3
