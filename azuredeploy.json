@@ -279,7 +279,8 @@
       "version" : "latest"
     },
     "baseVMachineTemplateUriBastion" : "[concat(variables('baseTemplateUrl'), 'bastion.json')]",
-    "baseVMachineTemplateUriLogging" : "[concat(variables('baseTemplateUrl'), 'logging.json')]"
+    "baseVMachineTemplateUriLogging" : "[concat(variables('baseTemplateUrl'), 'logging.json')]",
+    "tmApiVersion" : "2015-11-01"
   },
   "resources" : [
     {
@@ -779,6 +780,59 @@
             "value" : "[parameters('sshPrivateData')]"
           }
         }
+      }
+    },
+    {
+      "apiVersion" : "[variables('tmApiVersion')]",
+      "type" : "Microsoft.Network/trafficManagerProfiles",
+      "name" : "MasterLB",
+      "location" : "global",
+      "dependsOn" : [
+        "['Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm1', 'pip')]",
+        "['Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm2', 'pip')]",
+        "['Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm3', 'pip')]"
+      ],
+      "properties" : {
+        "profileStatus" : "Enabled",
+        "trafficRoutingMethod" : "Weighted",
+        "dnsConfig" : {
+          "relativeName" : "[resourceGroup().name]",
+          "ttl" : 30
+        },
+        "monitorConfig" : {
+          "protocol" : "http",
+          "port" : 8443,
+          "path" : "/api"
+        },
+        "endpoints" : [
+          {
+            "name" : "endpoint0",
+            "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+            "properties" : {
+              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm1pip'))]",
+              "endpointStatus" : "Enabled",
+              "weight" : 1
+            }
+          },
+          {
+            "name" : "endpoint1",
+            "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+            "properties" : {
+              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm2pip'))]",
+              "endpointStatus" : "Enabled",
+              "weight" : 1
+            }
+          },
+          {
+            "name" : "endpoint2",
+            "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+            "properties" : {
+              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm3pip'))]",
+              "endpointStatus" : "Enabled",
+              "weight" : 1
+            }
+          }
+        ]
       }
     }
   ],
