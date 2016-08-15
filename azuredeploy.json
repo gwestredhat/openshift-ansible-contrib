@@ -788,9 +788,9 @@
       "name" : "MasterLB",
       "location" : "global",
       "dependsOn" : [
-        "['Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm1', 'pip')]",
-        "['Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm2', 'pip')]",
-        "['Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm3', 'pip')]"
+        "[concat('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm1pip'))]",
+        "[concat('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm2pip'))]",
+        "[concat('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm3pip'))]"
       ],
       "properties" : {
         "profileStatus" : "Enabled",
