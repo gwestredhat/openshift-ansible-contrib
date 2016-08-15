@@ -809,7 +809,7 @@
             "name" : "endpoint0",
             "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
             "properties" : {
-              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm1pip'))]",
+              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master1pip')]",
               "endpointStatus" : "Enabled",
               "weight" : 1
             }
@@ -818,7 +818,7 @@
             "name" : "endpoint1",
             "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
             "properties" : {
-              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm2pip'))]",
+              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master2pip')]",
               "endpointStatus" : "Enabled",
               "weight" : 1
             }
@@ -827,7 +827,7 @@
             "name" : "endpoint2",
             "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
             "properties" : {
-              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', concat(resourceGroup().name, 'm3pip'))]",
+              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master3pip')]",
               "endpointStatus" : "Enabled",
               "weight" : 1
             }
