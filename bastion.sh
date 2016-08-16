@@ -32,6 +32,8 @@ chown root /root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 
 subscription-manager unregister 
+yum -y remove RHEL7
+rm -f /etc/yum.repos.d/rh-cloud.repo
 subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
 subscription-manager repos --disable="*"
@@ -75,8 +77,8 @@ openshift_use_dnsmasq=False
 openshift_public_hostname=${HOSTNAME}
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=${HOSTNAME}
-openshift_master_cluster_public_hostname=${HOSTNAME}
+openshift_master_cluster_hostname=${HOSTNAME}.trafficmanager.net
+openshift_master_cluster_public_hostname=${HOSTNAME}.trafficmanager.net
 
 [masters]
 master1 openshift_node_labels="{'role': 'master'}"
@@ -130,8 +132,8 @@ cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /home/${USERNAME}/subscribe.yml
 ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-oadm registry --selector=region=infra
-oadm router --selector=region=infra
+ssh master1 oadm registry --selector=region=infra
+ssh master1 oadm router --selector=region=infra
 EOF
 
 cat <<EOF > /home/${USERNAME}/.ansible.cfg
