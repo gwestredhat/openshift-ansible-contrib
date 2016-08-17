@@ -1,17 +1,18 @@
 #!/bin/bash
 
-USERNAME=$1
-PASSWORD=$2
-HOSTNAME=$3
-NODECOUNT=$4
-ROUTEREXTIP=$5
-RHNUSERNAME=$6
-RHNPASSWORD=$7
-RHNPOOLID=$8
-SSHPRIVATEDATA=$9
-SSHPUBLICDATA=$10
-SSHPUBLICDATA2=$11
-SSHPUBLICDATA3=$12
+RESOURCEGROUP=$1
+USERNAME=$2
+PASSWORD=$3
+HOSTNAME=$4
+NODECOUNT=$5
+ROUTEREXTIP=$6
+RHNUSERNAME=$7
+RHNPASSWORD=$8
+RHNPOOLID=$9
+SSHPRIVATEDATA=$10
+SSHPUBLICDATA=$11
+SSHPUBLICDATA2=$12
+SSHPUBLICDATA3=$13
 
 ps -ef | grep bastion.sh > cmdline.out
 
@@ -61,6 +62,7 @@ etcd
 nodes
 
 [OSEv3:vars]
+azure_resource_group=${RESOURCEGROUP}
 rhn_user_name=${RHNUSERNAME}
 rhn_password=${RHNPASSWORD}
 rhn_pool_id=${RHNPOOLID}
@@ -74,11 +76,11 @@ remote_user=${USERNAME}
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
 openshift_use_dnsmasq=False
-openshift_public_hostname=${HOSTNAME}
+openshift_public_hostname=${RESOURCEGROUP}.trafficmanager.net
 
 openshift_master_cluster_method=native
-openshift_master_cluster_hostname=${HOSTNAME}.trafficmanager.net
-openshift_master_cluster_public_hostname=${HOSTNAME}.trafficmanager.net
+openshift_master_cluster_hostname=${RESOURCEGROUP}.trafficmanager.net
+openshift_master_cluster_public_hostname=${RESOURCEGROUP}.trafficmanager.net
 
 [masters]
 master1 openshift_node_labels="{'role': 'master'}"
