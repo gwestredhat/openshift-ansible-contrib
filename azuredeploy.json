@@ -162,7 +162,7 @@
     },
     "nodeVMSize" : {
       "type" : "string",
-      "defaultValue" : "Standard_DS2",
+      "defaultValue" : "Standard_DS12",
       "allowedValues" : [
         "Standard_A0",
         "Standard_A1",
