@@ -280,7 +280,8 @@
     },
     "baseVMachineTemplateUriBastion" : "[concat(variables('baseTemplateUrl'), 'bastion.json')]",
     "baseVMachineTemplateUriLogging" : "[concat(variables('baseTemplateUrl'), 'logging.json')]",
-    "tmApiVersion" : "2015-11-01"
+    "tmApiVersion" : "2015-11-01",
+    "baseVMachineTemplateUriStore" : "[concat(variables('baseTemplateUrl'), 'store.json')]"
   },
   "resources" : [
     {
@@ -833,6 +834,49 @@
             }
           }
         ]
+      }
+    },
+    {
+      "name" : "store1",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('nodeStorageName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'logging')]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriStore')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "store1"
+          },
+          "sa" : {
+            "value" : "[variables('nodeStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('nodeSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('nodeVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
       }
     }
   ],
