@@ -130,12 +130,24 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
 EOF
 
 
+cat <<EOF > /home/${USERNAME}/postinstall.yml
+---
+- hosts: masters
+  vars:
+    description: "auth users"
+  tasks:
+  - name: add initial user to OpenShift Enterprise
+    command: htpasswd -c -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+EOF
+
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /home/${USERNAME}/subscribe.yml
 ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-ssh master1 oadm registry --selector=region=infra
-ssh master1 oadm router --selector=region=infra
+ssh gwest@master1 oadm registry --selector=region=infra
+ssh gwest@master1 oadm router --selector=region=infra
+wget http://master1:8443/api > healtcheck.out
+ansible-playbook /home/${USERNAME}/postinstall.yml
 EOF
 
 cat <<EOF > /home/${USERNAME}/.ansible.cfg
