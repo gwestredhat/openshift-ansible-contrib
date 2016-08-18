@@ -241,6 +241,17 @@
       "metadata" : {
         "description" : "SSH rsa private key file as a string."
       }
+    },
+    "storeVMSize" : {
+      "type" : "string",
+      "defaultValue" : "Standard_DS3_v2",
+      "allowedValues" : [
+        "Standard_DS3_v2",
+        "Standard_DS12\t"
+      ],
+      "metadata" : {
+        "description" : "The size of the each Node Virtual Machine."
+      }
     }
   },
   "variables" : {
@@ -862,7 +873,7 @@
             "value" : "[variables('nodeSubnetRef')]"
           },
           "vmSize" : {
-            "value" : "[parameters('nodeVMSize')]"
+            "value" : "[parameters('storeVMSize')]"
           },
           "adminUsername" : {
             "value" : "[parameters('adminUsername')]"
