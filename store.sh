@@ -4,8 +4,12 @@ yum -y update
 yum -y install targetcli
 systemctl start target
 systemctl enable target
+systemctl restart target.service
+firewall-cmd --permanent --add-port=3260/tcp
+firewall-cmd --reload
 pvcreate /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj
 vgcreate vg1 /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj
+return 0
 lvcreate -l 100%FREE -n vol1 vg1
 targetcli
 cd backstore/block
@@ -22,8 +26,5 @@ cd /
 ls
 saveconfig
 exit
-enable target.service
 systemctl restart target.service
-firewall-cmd --permanent --add-port=3260/tcp
-firewall-cmd --reload
 return 0

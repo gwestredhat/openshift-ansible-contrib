@@ -82,6 +82,16 @@ openshift_master_cluster_method=native
 openshift_master_cluster_hostname=${RESOURCEGROUP}.trafficmanager.net
 openshift_master_cluster_public_hostname=${RESOURCEGROUP}.trafficmanager.net
 
+# Enable cockpit
+osm_use_cockpit=true
+
+# Set cockpit plugins
+osm_cockpit_plugins=['cockpit-kubernetes']
+
+# default storage plugin dependencies to install, by default the ceph and
+# glusterfs plugin dependencies will be installed, if available.
+osn_storage_plugin_deps=['iscsi']
+
 [masters]
 master1 openshift_node_labels="{'role': 'master'}"
 master2 openshift_node_labels="{'role': 'master'}"
