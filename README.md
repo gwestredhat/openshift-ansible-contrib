@@ -25,8 +25,11 @@ New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <Re
 ```
 
 
-
 ## Parameters
+SSHKeyData - Public Key - Copy/Past frome .ssh/id_rsa.pub - pbcopy < ~/.ssh/id_rsa.pub
+PoolId - From RREL - subscription-manager list --available
+SSHPrivate Data - Base64 Encoded id_rsa - cat ~/.ssh/id_rsa | base64 | pbcopy
+
 ### Input Parameters
 
 | Name| Type           | Description |
