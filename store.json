@@ -209,7 +209,7 @@
         "typeHandlerVersion" : "1.3",
         "settings" : {
           "fileUris" : [
-            "[concat(parameters('baseTemplateUrl'), 'node.sh')]"
+            "[concat(parameters('baseTemplateUrl'), 'store.sh')]"
           ],
           "commandToExecute" : "sh store.sh"
         }
