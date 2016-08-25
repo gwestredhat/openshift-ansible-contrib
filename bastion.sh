@@ -70,7 +70,7 @@ debug_level=2
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
-ansible_sudo=true
+ansible_become=yes
 ansible_ssh_user=${USERNAME}
 remote_user=${USERNAME}
 
@@ -132,9 +132,11 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: register hosts
     redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} pool=${RHNPOOLID} autosubscribe=true
   - name: disable all repos
-    command: subscription-manager repos --disable="*"
+    shell: subscription-manager repos --disable="*" >> /dev/null
   - name: enable selected repos
     command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
+    name: install the latest version of PyYAML
+    yum: name=PyYAML state=latest
   - name: Update all hosts
     command: yum -y update
 EOF
