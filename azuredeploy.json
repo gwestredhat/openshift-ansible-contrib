@@ -812,7 +812,7 @@
           "ttl" : 30
         },
         "monitorConfig" : {
-          "protocol" : "http",
+          "protocol" : "https",
           "port" : 8443,
           "path" : "/api"
         },
