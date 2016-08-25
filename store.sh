@@ -2,6 +2,7 @@
 
 yum -y update
 yum -y install targetcli
+yum -y install lvm2
 systemctl start target
 systemctl enable target
 systemctl restart target.service
