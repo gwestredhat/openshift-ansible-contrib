@@ -136,7 +136,7 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     shell: subscription-manager repos --disable="*" >> /dev/null
   - name: enable selected repos
     command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
-    name: install the latest version of PyYAML
+  - name: install the latest version of PyYAML
     yum: name=PyYAML state=latest
   - name: Update all hosts
     command: yum -y update
