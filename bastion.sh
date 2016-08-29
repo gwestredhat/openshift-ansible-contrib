@@ -135,11 +135,12 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: disable all repos
     shell: subscription-manager repos --disable="*" >> /dev/null
   - name: enable selected repos
-    command: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms"
+    shell: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms" >> /dev/null
   - name: install the latest version of PyYAML
     yum: name=PyYAML state=latest
   - name: Update all hosts
-    command: yum -y update
+    yum: name=* state=latest
+
 EOF
 
 
@@ -149,8 +150,11 @@ cat <<EOF > /home/${USERNAME}/postinstall.yml
   vars:
     description: "auth users"
   tasks:
+  - name: Create Master Directory
+    file: path=/etc/origin/master state=directory
   - name: add initial user to OpenShift Enterprise
-    command: htpasswd -c -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+    shell: htpasswd -c -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+
 EOF
 
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
