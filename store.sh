@@ -34,62 +34,14 @@ sfdisk /dev/sdj << EOF
 EOF
 pvcreate /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1 /dev/sdg1 /dev/sdh1 /dev/sdi1 /dev/sdj1
 vgcreate vg1 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1 /dev/sdg1 /dev/sdh1 /dev/sdi1 /dev/sdj1
-cat <<EOF >  ~/ose_pvcreate_lun
-#!/bin/bash
-
-# $1 = volumegroup
-# $2 = size
-# #3 = count
-
-if [ $# -eq 0 ]; then
-   echo "pvcreatelun volgroup size count"
-   echo "    volgroup is the volgroup as created by vgcreate"
-   echo "    size - example 1G"
-   echo "    count - Optional - Number of luns to create"
-   exit 0
-   fi
-# Call ourselves recursively to do repeats
-if [ $# -eq 3 ]; then
-   for ((i=0;i < $3;i++))
-       do
-      ./ose_pvcreate_lun $1 $2
-      done
-    exit 0
-   fi
-
-LUNFILE=~/.oseluncount.cnt
-TAG=$0
-
-if [ -e ${LUNFILE} ]; then
-    count=$(cat ${LUNFILE})
-else
-    touch "$LUNFILE"
-    count=0
-fi
-
-((count++))
-
-echo ${count} > ${LUNFILE}
-
-export volname=ose"$count"x"$2"
-
-lvcreate -L $2 -n $volname $1 | logger --tag $TAG
-mkfs.ext4 -q -F _F /dev/vg1/$volname 2>&1 | logger --tag $TAG
-if [ ${count} -eq 1 ]; then
-     echo "Setup device"
-     targetcli /iscsi create iqn.2016-02.local.store1:t1 |  logger --tag $TAG
-     targetcli /iscsi/iqn.2016-02.local.store1:t1/tpg1/acls create iqn.2016-02.local.azure.nodes | logger --tag $TAG
-     targetcli /iscsi/iqn.2016-02.local.store1:t1/tpg1/ set attribute authentication=0 | logger --tag $TAG
-     targetcli saveconfig
-fi
-targetcli backstores/block/ create "$volname" /dev/vg1/"$volname" |  logger --tag $TAG
-targetcli /iscsi/iqn.2016-02.local.store1:t1/tpg1/luns create /backstores/block/"$volname" | logger --tag $TAG
-
-targetcli saveconfig | logger --tag $TAG
+cat <<EOF | base64 --decode >  ~/ose_pvcreate_lun
+IyEvYmluL2Jhc2gKCiMgJDEgPSB2b2x1bWVncm91cAojICQyID0gc2l6ZQojICMzID0gY291bnQKCmlmIFsgJCMgLWVxIDAgXTsgdGhlbgogICBlY2hvICJwdmNyZWF0ZWx1biB2b2xncm91cCBzaXplIGNvdW50IgogICBlY2hvICIgICAgdm9sZ3JvdXAgaXMgdGhlIHZvbGdyb3VwIGFzIGNyZWF0ZWQgYnkgdmdjcmVhdGUiCiAgIGVjaG8gIiAgICBzaXplIC0gZXhhbXBsZSAxRyIKICAgZWNobyAiICAgIGNvdW50IC0gT3B0aW9uYWwgLSBOdW1iZXIgb2YgbHVucyB0byBjcmVhdGUiCiAgIGV4aXQgMAogICBmaQojIENhbGwgb3Vyc2VsdmVzIHJlY3Vyc2l2ZWx5IHRvIGRvIHJlcGVhdHMKaWYgWyAkIyAtZXEgMyBdOyB0aGVuCiAgIGZvciAoKGk9MDtpIDwgJDM7aSsrKSkKICAgICAgIGRvCiAgICAgIC4vb3NlX3B2Y3JlYXRlX2x1biAkMSAkMgogICAgICBkb25lCiAgICBleGl0IDAKICAgZmkKCkxVTkZJTEU9fi8ub3NlbHVuY291bnQuY250ClRBRz0kMAoKaWYgWyAtZSAke0xVTkZJTEV9IF07IHRoZW4KICAgIGNvdW50PSQoY2F0ICR7TFVORklMRX0pCmVsc2UKICAgIHRvdWNoICIkTFVORklMRSIKICAgIGNvdW50PTAKZmkKCigoY291bnQrKykpCgplY2hvICR7Y291bnR9ID4gJHtMVU5GSUxFfQoKZXhwb3J0IHZvbG5hbWU9b3NlIiRjb3VudCJ4IiQyIgoKbHZjcmVhdGUgLUwgJDIgLW4gJHZvbG5hbWUgJDEgfCBsb2dnZXIgLS10YWcgJFRBRwpta2ZzLmV4dDQgLXEgLUYgX0YgL2Rldi92ZzEvJHZvbG5hbWUgMj4mMSB8IGxvZ2dlciAtLXRhZyAkVEFHCmlmIFsgJHtjb3VudH0gLWVxIDEgXTsgdGhlbgogICAgIGVjaG8gIlNldHVwIGRldmljZSIKICAgICB0YXJnZXRjbGkgL2lzY3NpIGNyZWF0ZSBpcW4uMjAxNi0wMi5sb2NhbC5zdG9yZTE6dDEgfCAgbG9nZ2VyIC0tdGFnICRUQUcKICAgICB0YXJnZXRjbGkgL2lzY3NpL2lxbi4yMDE2LTAyLmxvY2FsLnN0b3JlMTp0MS90cGcxL2FjbHMgY3JlYXRlIGlxbi4yMDE2LTAyLmxvY2FsLmF6dXJlLm5vZGVzIHwgbG9nZ2VyIC0tdGFnICRUQUcKICAgICB0YXJnZXRjbGkgL2lzY3NpL2lxbi4yMDE2LTAyLmxvY2FsLnN0b3JlMTp0MS90cGcxLyBzZXQgYXR0cmlidXRlIGF1dGhlbnRpY2F0aW9uPTAgfCBsb2dnZXIgLS10YWcgJFRBRwogICAgIHRhcmdldGNsaSBzYXZlY29uZmlnCmZpCnRhcmdldGNsaSBiYWNrc3RvcmVzL2Jsb2NrLyBjcmVhdGUgIiR2b2xuYW1lIiAvZGV2L3ZnMS8iJHZvbG5hbWUiIHwgIGxvZ2dlciAtLXRhZyAkVEFHCnRhcmdldGNsaSAvaXNjc2kvaXFuLjIwMTYtMDIubG9jYWwuc3RvcmUxOnQxL3RwZzEvbHVucyBjcmVhdGUgL2JhY2tzdG9yZXMvYmxvY2svIiR2b2xuYW1lIiB8IGxvZ2dlciAtLXRhZyAkVEFHCgp0YXJnZXRjbGkgc2F2ZWNvbmZpZyB8IGxvZ2dlciAtLXRhZyAkVEFHCgoK
 EOF
 chmod +x ~/ose_pvcreate_lun
 ~/ose_pvcreate_lun vg1 1G 400
 ~/ose_pvcreate_lun vg1 10G 20
 ~/ose_pvcreate_lun vg1 50G 4
+firewall-cmd --permanent --add-port=3260/tcp
+firewall-cmd --reload
 systemctl restart target.service
 return 0
