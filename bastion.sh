@@ -32,6 +32,7 @@ chmod 600 /root/.ssh/id_rsa.pub
 chown root /root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 
+sleep 30
 subscription-manager unregister 
 yum -y remove RHEL7
 rm -f /etc/yum.repos.d/rh-cloud.repo
