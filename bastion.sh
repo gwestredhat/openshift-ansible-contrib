@@ -67,13 +67,9 @@ azure_resource_group=${RESOURCEGROUP}
 rhn_user_name=${RHNUSERNAME}
 rhn_password=${RHNPASSWORD}
 rhn_pool_id=${RHNPOOLID}
-debug_level=2
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
-forks=30
-gather_timeout=60
-timeout=240
 
 ansible_become=yes
 ansible_ssh_user=${USERNAME}
@@ -166,10 +162,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /home/${USERNAME}/subscribe.yml
 sleep 120
 ansible all --module-name=ping > ansible-preinstall-ping.out
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
-sleep 120
-# The first install will fail second one will work. 
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
 # ssh gwest@master1 oadm registry --selector=region=infra
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
@@ -179,12 +172,18 @@ EOF
 cat <<EOF > /home/${USERNAME}/.ansible.cfg
 [defaults]
 host_key_checking = False
+forks=30
+gather_timeout=60
+timeout=240
 EOF
 chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
   
 cat <<EOF > /root/.ansible.cfg
 [defaults]
 host_key_checking = False
+forks=30
+gather_timeout=60
+timeout=240
 EOF
 
 
