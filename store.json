@@ -211,7 +211,7 @@
           "fileUris" : [
             "[concat(parameters('baseTemplateUrl'), 'store.sh')]"
           ],
-          "commandToExecute" : "sh store.sh"
+          "commandToExecute" : "[ concat('sh store.sh ', resourceGroup().name, ' ', parameters('adminUsername'), ' ',   variables('sQuote'),  parameters('sshPrivateData'), variables('sQuote'),  ' ', variables('sQuote'), parameters('sshKeyData'), variables('sQuote')  ) ]"
         }
       }
     }

@@ -886,6 +886,9 @@
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
           }
         }
       }

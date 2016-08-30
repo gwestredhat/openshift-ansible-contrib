@@ -1,5 +1,33 @@
 #!/bin/bash
 
+RESOURCEGROUP=$1
+USERNAME=$2
+SSHPRIVATEDATA=${3}
+SSHPUBLICDATA=${4}
+SSHPUBLICDATA2=${5}
+SSHPUBLICDATA3=${6}
+
+export OSEUSERNAME=$2
+
+ps -ef | grep bastion.sh > cmdline.out
+
+mkdir -p /home/$USERNAME/.ssh
+echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$USERNAME/.ssh/id_rsa.pub
+echo $SSHPRIVATEDATA | base64 --d > /home/$USERNAME/.ssh/id_rsa
+chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
+chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
+chown $USERNAME /home/$USERNAME/.ssh/id_rsa
+chmod 600 /home/$USERNAME/.ssh/id_rsa
+
+mkdir -p /root/.ssh
+echo $SSHPRIVATEDATA | base64 --d > /root/.ssh/id_rsa
+echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3   >  /root/.ssh/id_rsa.pub
+chown root /root/.ssh/id_rsa.pub
+chmod 600 /root/.ssh/id_rsa.pub
+chown root /root/.ssh/id_rsa
+chmod 600 /root/.ssh/id_rsa
+
+
 yum -y update
 yum -y install targetcli
 yum -y install lvm2
@@ -40,10 +68,18 @@ firewall-cmd --permanent --add-port=3260/tcp
 firewall-cmd --reload
 chmod +x ~/ose_pvcreate_lun
 cd ~
-until $(curl --output /dev/null --silent --head --fail https://master1:8443/api); do
-  printf '.'
-  sleep 5
- done
+while true
+do
+  STATUS=$(curl -k -s -o /dev/null -w '%{http_code}' https://master1:8443/api)
+  if [ $STATUS -eq 200 ]; then
+    echo "Got 200! All done!"
+    break
+  else
+    echo "."
+  fi
+  sleep 10
+done
+
 ./ose_pvcreate_lun vg1 1G 400 
 ./ose_pvcreate_lun vg1 10G 20 
 ./ose_pvcreate_lun vg1 50G 4 
