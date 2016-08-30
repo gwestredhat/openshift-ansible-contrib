@@ -41,7 +41,8 @@
   },
   "variables" : {
     "apiVersion" : "2015-06-15",
-    "sshKeyPath" : "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
+    "sshKeyPath" : "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
+    "sQuote" : "\""
   },
   "resources" : [
     {
