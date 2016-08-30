@@ -71,6 +71,10 @@ debug_level=2
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
+forks=30
+gather_timeout=60
+timeout=240
+
 ansible_become=yes
 ansible_ssh_user=${USERNAME}
 remote_user=${USERNAME}
