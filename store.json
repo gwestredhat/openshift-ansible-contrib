@@ -31,6 +31,12 @@
       "metadata" : {
         "description" : "imageReference object that should be used to create the virtual machine"
       }
+    },
+    "sshPrivateData" : {
+      "type" : "string",
+      "metadata" : {
+        "description" : "SSH rsa private key file as a base64 string."
+      }
     }
   },
   "variables" : {

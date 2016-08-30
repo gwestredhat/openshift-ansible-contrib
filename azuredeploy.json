@@ -239,7 +239,7 @@
     "sshPrivateData" : {
       "type" : "string",
       "metadata" : {
-        "description" : "SSH rsa private key file as a string."
+        "description" : "SSH rsa private key file as a base64 string."
       }
     },
     "storeVMSize" : {
