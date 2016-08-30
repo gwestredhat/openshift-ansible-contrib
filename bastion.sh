@@ -164,7 +164,7 @@ EOF
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /home/${USERNAME}/subscribe.yml
-sleep 30
+sleep 120
 ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
 ssh gwest@master1 oadm registry --selector=region=infra
 ssh gwest@master1 oadm router --selector=region=infra
