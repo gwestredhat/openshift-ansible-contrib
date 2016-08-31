@@ -162,7 +162,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /home/${USERNAME}/subscribe.yml
 sleep 120
 ansible all --module-name=ping > ansible-preinstall-ping.out
-ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
+ansible-playbook -vvvv /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
 # ssh gwest@master1 oadm registry --selector=region=infra
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
