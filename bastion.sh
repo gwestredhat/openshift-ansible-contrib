@@ -176,7 +176,7 @@ forks=30
 gather_timeout=60
 timeout=240
 [ssh_connection]
-ControlPath=/home/${USERAME}/.ansible/cp/ssh-%%h-%%p-%%r
+ControlPath=/home/${USERNAME}/.ansible/cp/ssh-%%h-%%p-%%r
 EOF
 chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
   
@@ -187,7 +187,7 @@ forks=30
 gather_timeout=60
 timeout=240
 [ssh_connection]
-ControlPath=/home/${USERAME}/.ansible/cp/ssh-%%h-%%p-%%r
+ControlPath=/root/.ansible/cp/ssh-%%h-%%p-%%r
 EOF
 
 
