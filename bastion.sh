@@ -175,6 +175,8 @@ host_key_checking = False
 forks=30
 gather_timeout=60
 timeout=240
+[ssh_connection]
+ControlPath=/home/${USERAME}/.ansible/cp/ssh-%%h-%%p-%%r
 EOF
 chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
   
@@ -184,6 +186,8 @@ host_key_checking = False
 forks=30
 gather_timeout=60
 timeout=240
+[ssh_connection]
+ControlPath=/home/${USERAME}/.ansible/cp/ssh-%%h-%%p-%%r
 EOF
 
 
