@@ -67,6 +67,7 @@ azure_resource_group=${RESOURCEGROUP}
 rhn_user_name=${RHNUSERNAME}
 rhn_password=${RHNPASSWORD}
 rhn_pool_id=${RHNPOOLID}
+openshift_install_examples=true
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
@@ -98,10 +99,10 @@ master1 openshift_node_labels="{'role': 'master'}"
 master2 openshift_node_labels="{'role': 'master'}"
 master3 openshift_node_labels="{'role': 'master'}"
 
-[etcd]
-master1
-master2
-master3
+#[etcd]
+#master1
+#master2
+#master3
 
 [nodes]
 master1 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
@@ -160,7 +161,6 @@ EOF
 cat <<EOF > /home/${USERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook /home/${USERNAME}/subscribe.yml
-sleep 120
 ansible all --module-name=ping > ansible-preinstall-ping.out
 ansible-playbook -vvvv /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
 # ssh gwest@master1 oadm registry --selector=region=infra
@@ -177,7 +177,6 @@ gather_timeout=60
 timeout=240
 [ssh_connection]
 ssh_args = -o ControlMaster=auto -o ControlPersist=600s
-control_path = /root/.ansible/gw%%h-%%r
 EOF
 chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
   
@@ -189,7 +188,6 @@ gather_timeout=60
 timeout=240
 [ssh_connection]
 ssh_args = -o ControlMaster=auto -o ControlPersist=600s
-control_path = /root/.ansible/gw%%h-%%r
 EOF
 
 
