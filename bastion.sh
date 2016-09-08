@@ -99,10 +99,10 @@ master1 openshift_node_labels="{'role': 'master'}"
 master2 openshift_node_labels="{'role': 'master'}"
 master3 openshift_node_labels="{'role': 'master'}"
 
-#[etcd]
-#master1
-#master2
-#master3
+[etcd]
+master1
+master2
+master3
 
 [nodes]
 master1 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
