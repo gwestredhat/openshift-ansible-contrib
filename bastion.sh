@@ -171,23 +171,29 @@ EOF
 
 cat <<EOF > /home/${USERNAME}/.ansible.cfg
 [defaults]
+remote_tmp     = ~/.ansible/tmp
+local_tmp      = ~/.ansible/tmp
 host_key_checking = False
 forks=30
 gather_timeout=60
 timeout=240
 [ssh_connection]
-ssh_args = -o ControlMaster=auto -o ControlPersist=600s
+control_path = ~/.ansible/cp/ssh%%h-%%p-%%r
+ssh_args = -o ControlMaster=auto -o ControlPersist=600s -o ControlPath=~/.ansible/cp-%h-%p-%r
 EOF
 chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
   
 cat <<EOF > /root/.ansible.cfg
 [defaults]
+remote_tmp     = ~/.ansible/tmp
+local_tmp      = ~/.ansible/tmp
 host_key_checking = False
 forks=30
 gather_timeout=60
 timeout=240
 [ssh_connection]
-ssh_args = -o ControlMaster=auto -o ControlPersist=600s
+control_path = ~/.ansible/cp/ssh%%h-%%p-%%r
+ssh_args = -o ControlMaster=auto -o ControlPersist=600s -o ControlPath=~/.ansible/cp-%h-%p-%r
 EOF
 
 
