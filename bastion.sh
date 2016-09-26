@@ -123,6 +123,8 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   tasks:
   - name: check connection
     ping:
+  - name: Update all hosts via Azure Repos
+    yum: name=* state=latest
   - name: Get rid of rhui repos
     file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
   - name: Get rid of rhui Load balancers
@@ -134,9 +136,9 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: register hosts
     redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} pool=${RHNPOOLID} autosubscribe=true
   - name: disable all repos
-    shell: subscription-manager repos --disable="*" >> /dev/null
+    shell: subscription-manager repos --disable="*" 
   - name: enable selected repos
-    shell: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms" >> /dev/null
+    shell: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms" 
   - name: install the latest version of PyYAML
     yum: name=PyYAML state=latest
   - name: Update all hosts
