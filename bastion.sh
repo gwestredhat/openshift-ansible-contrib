@@ -131,6 +131,7 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     ping:
   - name: Update all hosts via Azure Repos
     yum: name=* state=latest
+    ignore_errors: yes
   - name: Get rid of rhui repos
     file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
   - name: Get rid of rhui Load balancers
