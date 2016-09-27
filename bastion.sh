@@ -123,7 +123,7 @@ htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 
 cat <<EOF > /home/${USERNAME}/subscribe.yml
 ---
-- hosts: nodes
+- hosts: all
   vars:
     description: "Subscribe OSE"
   tasks:
