@@ -132,13 +132,19 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: remove the RHUI package
     yum: name=RHEL7 state=absent
   - name: Get rid of old subs
-    redhat_subscription: state=absent
+    shell: subscription-manager unregister
   - name: register hosts
-    redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} pool=${RHNPOOLID} autosubscribe=true
+    redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} 
+  - name: attach sub
+    shell: subscription-manager attach --pool=$RHNPOOLID
   - name: disable all repos
     shell: subscription-manager repos --disable="*" 
-  - name: enable selected repos
-    shell: subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-3.2-rpms" 
+  - name: enable rhel7 repo
+    shell: subscription-manager repos --enable="rhel-7-server-rpms"
+  - name: enable extras repos
+    shell: subscription-manager repos --enable="rhel-7-server-extras-rpms"
+  - name: enable ose repos
+    shell: subscription-manager repos --enable="rhel-7-server-ose-3.2-rpms"
   - name: install the latest version of PyYAML
     yum: name=PyYAML state=latest
   - name: Update all hosts
