@@ -133,6 +133,7 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     yum: name=RHEL7 state=absent
   - name: Get rid of old subs
     shell: subscription-manager unregister
+    ignore_errors: yes
   - name: register hosts
     redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} 
   - name: attach sub
