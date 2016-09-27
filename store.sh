@@ -1,7 +1,7 @@
 #!/bin/bash
 
-RESOURCEGROUP=$1
-USERNAME=$2
+RESOURCEGROUP=${1}
+USERNAME=${2}
 SSHPRIVATEDATA=${3}
 SSHPUBLICDATA=${4}
 SSHPUBLICDATA2=${5}
@@ -9,7 +9,7 @@ SSHPUBLICDATA3=${6}
 
 export OSEUSERNAME=$2
 
-ps -ef | grep bastion.sh > cmdline.out
+ps -ef | grep store.sh > cmdline.out
 
 mkdir -p /home/$USERNAME/.ssh
 echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$USERNAME/.ssh/id_rsa.pub
@@ -81,7 +81,7 @@ do
 done
 
 cd /root
-./ose_pvcreate_lun vg1 1G 400 
-./ose_pvcreate_lun vg1 10G 20 
-./ose_pvcreate_lun vg1 50G 4 
-systemctl restart target.service
+# ./ose_pvcreate_lun vg1 1G 400 
+# ./ose_pvcreate_lun vg1 10G 20 
+# ./ose_pvcreate_lun vg1 50G 4 
+# systemctl restart target.service

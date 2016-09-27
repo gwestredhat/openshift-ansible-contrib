@@ -61,6 +61,7 @@ cat <<EOF > /etc/ansible/hosts
 masters
 etcd
 nodes
+misc
 
 [OSEv3:vars]
 azure_resource_group=${RESOURCEGROUP}
@@ -110,6 +111,11 @@ master2 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_sc
 master3 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
 node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+
+
+[misc]
+store1
+bastion
 EOF
 
 mkdir -p /etc/origin/master
@@ -148,6 +154,8 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     shell: subscription-manager repos --enable="rhel-7-server-ose-3.2-rpms"
   - name: install the latest version of PyYAML
     yum: name=PyYAML state=latest
+  - name: Install the ose client
+    yum: name=atomic-openshift-clients state=latest
   - name: Update all hosts
     yum: name=* state=latest
 
