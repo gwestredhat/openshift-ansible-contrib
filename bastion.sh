@@ -142,7 +142,7 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     shell: subscription-manager unregister
     ignore_errors: yes
   - name: register hosts
-    redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} 
+    shell: subscription-manager register --username ${RHNUSERNAME} --password ${RHNPASSWORD} 
     register: task_result
     until: task_result.rc == 0
     retries: 10
