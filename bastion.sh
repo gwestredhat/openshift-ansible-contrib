@@ -40,7 +40,7 @@ subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
 subscription-manager repos --disable="*"
 subscription-manager repos     --enable="rhel-7-server-rpms"     --enable="rhel-7-server-extras-rpms"
-subscription-manager repos     --enable="rhel-7-server-ose-3.2-rpms"
+subscription-manager repos     --enable="rhel-7-server-ose-3.3-rpms"
 yum -y install atomic-openshift-utils
 yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
 yum -y install docker
@@ -162,7 +162,7 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: enable extras repos
     shell: subscription-manager repos --enable="rhel-7-server-extras-rpms"
   - name: enable ose repos
-    shell: subscription-manager repos --enable="rhel-7-server-ose-3.2-rpms"
+    shell: subscription-manager repos --enable="rhel-7-server-ose-3.3-rpms"
   - name: install the latest version of PyYAML
     yum: name=PyYAML state=latest
   - name: Install the ose client
