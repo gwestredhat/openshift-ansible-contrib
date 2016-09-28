@@ -81,7 +81,7 @@ done
 
 cd /root
 mkdir .kube
-scp ${USERNAME}@master1:~/.kube/config /tmp/kube-config
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${USERNAME}@master1:~/.kube/config /tmp/kube-config
 cp /tmp/kube-config /root/.kube/config
 mkdir /home/${USERNAME}/.kube
 cp /tmp/kube-config /home/${USERNAME}/.kube/config
