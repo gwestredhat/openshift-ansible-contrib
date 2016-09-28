@@ -81,7 +81,9 @@ done
 
 cd /root
 mkdir .kube
-scp ${USERNAME}@master1:~/.kube/config .kube/config
+scp  -u ${USERNAME} ${USERNAME}@master1:~/.kube/config /tmp/kube-config
+cp /tmp/kube-config ~/.kube/config
+rm -f /tmp/kube-config
 # ./ose_pvcreate_lun vg1 1G 400 
 # ./ose_pvcreate_lun vg1 10G 20 
 # ./ose_pvcreate_lun vg1 50G 4 
