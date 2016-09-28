@@ -82,12 +82,12 @@ done
 cd /root
 mkdir .kube
 scp ${USERNAME}@master1:~/.kube/config /tmp/kube-config
-cp /tmp/kube-config ~/.kube/config
+cp /tmp/kube-config /root/.kube/config
 mkdir /home/${USERNAME}/.kube
 cp /tmp/kube-config /home/${USERNAME}/.kube/config
 chown --recursive ${USERNAME} /home/${USERNAME}/.kube
 rm -f /tmp/kube-config
-# ./ose_pvcreate_lun vg1 1G 400 
-# ./ose_pvcreate_lun vg1 10G 20 
-# ./ose_pvcreate_lun vg1 50G 4 
-# systemctl restart target.service
+./ose_pvcreate_lun vg1 1G 200 
+./ose_pvcreate_lun vg1 10G 20 
+./ose_pvcreate_lun vg1 50G 4 
+systemctl restart target.service
