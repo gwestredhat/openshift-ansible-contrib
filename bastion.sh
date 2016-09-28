@@ -143,8 +143,18 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     ignore_errors: yes
   - name: register hosts
     redhat_subscription: state=present username=${RHNUSERNAME} password=${RHNPASSWORD} 
+    register: task_result
+    until: task_result.rc == 0
+    retries: 10
+    delay: 30
+    ignore_errors: yes
   - name: attach sub
     shell: subscription-manager attach --pool=$RHNPOOLID
+    register: task_result
+    until: task_result.rc == 0
+    retries: 10
+    delay: 30
+    ignore_errors: yes
   - name: disable all repos
     shell: subscription-manager repos --disable="*" 
   - name: enable rhel7 repo
