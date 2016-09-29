@@ -87,7 +87,7 @@ mkdir /home/${USERNAME}/.kube
 cp /tmp/kube-config /home/${USERNAME}/.kube/config
 chown --recursive ${USERNAME} /home/${USERNAME}/.kube
 rm -f /tmp/kube-config
-./ose_pvcreate_lun vg1 1G 400 
-./ose_pvcreate_lun vg1 10G 20 
-./ose_pvcreate_lun vg1 50G 4 
+./ose_pvcreate_lun vg1 10 20 
+./ose_pvcreate_lun vg1 50 4 
+./ose_pvcreate_lun vg1 1 400 
 systemctl restart target.service

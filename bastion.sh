@@ -174,6 +174,15 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: restart iscsid service
     shell: systemctl restart iscsi
     ignore_errors: yes
+  - name: Enable Iscsi
+    shell: systemctl enable iscsi
+    ignore_errors: yes
+  - name: Start iScsi Initiator  Service
+    shell: systemctl start iscsi
+    ignore_errors: yes
+  - name: Login All Hosts
+    shell: iscsiadm --mode node --portal store1 --login
+    ignore_errors: yes
   - name: Update all hosts
     yum: name=* state=latest
 
@@ -202,6 +211,14 @@ ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml 
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
 ansible-playbook /home/${USERNAME}/postinstall.yml
+cd /root
+mkdir .kube
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${USERNAME}@master1:~/.kube/config /tmp/kube-config
+cp /tmp/kube-config /root/.kube/config
+mkdir /home/${USERNAME}/.kube
+cp /tmp/kube-config /home/${USERNAME}/.kube/config
+chown --recursive ${USERNAME} /home/${USERNAME}/.kube
+rm -f /tmp/kube-config
 EOF
 
 cat <<EOF > /home/${USERNAME}/.ansible.cfg
