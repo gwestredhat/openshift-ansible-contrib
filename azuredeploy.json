@@ -832,7 +832,7 @@
             "properties" : {
               "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master2pip')]",
               "endpointStatus" : "Enabled",
-              "weight" : 1
+              "weight" : 2
             }
           },
           {
@@ -841,7 +841,7 @@
             "properties" : {
               "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master3pip')]",
               "endpointStatus" : "Enabled",
-              "weight" : 1
+              "weight" : 3
             }
           }
         ]
