@@ -167,6 +167,13 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
     yum: name=PyYAML state=latest
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
+  - name: Install iscsi initiator utils
+    yum: name=iscsi-initiator-utils state=latest
+  - name: add new initiator name
+    lineinfile: dest=/etc/iscsi/initiatorname.iscsi create=yes regexp="InitiatorName=*" line="InitiatorName=iqn.2016-02.local.azure.nodes" state=present
+  - name: restart iscsid service
+    shell: systemctl restart iscsi
+    ignore_errors: yes
   - name: Update all hosts
     yum: name=* state=latest
 
