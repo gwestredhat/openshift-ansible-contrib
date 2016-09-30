@@ -180,8 +180,19 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
   - name: Start iScsi Initiator  Service
     shell: systemctl start iscsi
     ignore_errors: yes
+  - name: Discover Devices on Iscsi  All Hosts
+    shell: iscsiadm --mode discovery --type sendtargets --portal store1
+    register: task_result
+    until: task_result.rc == 0
+    retries: 10
+    delay: 30
+    ignore_errors: yes
   - name: Login All Hosts
     shell: iscsiadm --mode node --portal store1 --login
+    register: task_result
+    until: task_result.rc == 0
+    retries: 10
+    delay: 30
     ignore_errors: yes
   - name: Update all hosts
     yum: name=* state=latest
