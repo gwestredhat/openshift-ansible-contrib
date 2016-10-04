@@ -72,6 +72,9 @@ openshift_install_examples=true
 deployment_type=openshift-enterprise
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 
+# default selectors for router and registry services
+openshift_router_selector='region=infra'
+openshift_registry_selector='region=infra'
 
 ansible_become=yes
 ansible_ssh_user=${USERNAME}
@@ -106,9 +109,9 @@ master2
 master3
 
 [nodes]
-master1 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
-master2 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
-master3 openshift_node_labels="{'region':'infra','zone':'default'}" openshift_schedulable=false
+master1 openshift_node_labels="{'region':'master','zone':'default'}" 
+master2 openshift_node_labels="{'region':'master','zone':'default'}" 
+master3 openshift_node_labels="{'region':'master','zone':'default'}" 
 node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
