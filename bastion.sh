@@ -33,6 +33,33 @@ chown root /root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 
 sleep 30
+# Setup ssmtp mta agent for use with gmail
+wget -c https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+rpm -ivh epel-release-7-8.noarch.rpm
+yum -y install ssmtp
+alternatives --set mta  /usr/sbin/sendmail.ssmtp
+systemctl stop postfix
+systemctl disable postfix
+cat <<EOF > /etc/ssmtp/ssmtp.conf
+root=postmaster
+mailhub=mail
+TLS_CA_File=/etc/pki/tls/certs/ca-bundle.crt
+mailhub=smtp.gmail.com:587   # SMTP server for Gmail
+Hostname=localhost
+UseTLS=YES
+UseSTARTTLS=Yes
+FromLineOverride=YES #TO CHANGE FROM EMAIL
+Root=${USERNAME}@gmail.com # Redirect root email
+AuthUser=${USERNAME}@gmail.com
+AuthPass=${PASSWORD}
+AuthMethod=LOGIN
+RewriteDomain=gmail.com
+EOF
+cat <<EOF > /etc/ssmtp/revaliases
+root:${USERNAME}@gmail.com:smtp.gmail.com:587 
+EOF
+echo "${RESOURCEGROUP} Bastion Host is starting software update" | ssmtp -s "${RESOURCEGROUP} Bastion Software Install" ${USERNAME}@gmail.com
+# Continue Setting Up Bastion
 subscription-manager unregister 
 yum -y remove RHEL7
 rm -f /etc/yum.repos.d/rh-cloud.repo
@@ -272,6 +299,7 @@ ansible all --module-name=ping > ansible2.out
 
 chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
 chmod 755 /home/${USERNAME}/openshift-install.sh
+echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | ssmtp -s "${RESOURCEGROUP} Openshift Install" ${USERNAME}@gmail.com
 /home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
 exit 0
 
