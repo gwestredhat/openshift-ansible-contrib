@@ -93,8 +93,6 @@ misc
 
 [OSEv3:vars]
 azure_resource_group=${RESOURCEGROUP}
-rhn_user_name=${RHNUSERNAME}
-rhn_password=${RHNPASSWORD}
 rhn_pool_id=${RHNPOOLID}
 openshift_install_examples=true
 deployment_type=openshift-enterprise
