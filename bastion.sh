@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RESOURCEGROUP=$1
-USERNAME=$2
+AUSERNAME=$2
 PASSWORD=$3
 HOSTNAME=$4
 NODECOUNT=$5
@@ -16,13 +16,13 @@ SSHPUBLICDATA3=${13}
 
 ps -ef | grep bastion.sh > cmdline.out
 
-mkdir -p /home/$USERNAME/.ssh
-echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$USERNAME/.ssh/id_rsa.pub
-echo $SSHPRIVATEDATA | base64 --d > /home/$USERNAME/.ssh/id_rsa
-chown $USERNAME /home/$USERNAME/.ssh/id_rsa.pub
-chmod 600 /home/$USERNAME/.ssh/id_rsa.pub
-chown $USERNAME /home/$USERNAME/.ssh/id_rsa
-chmod 600 /home/$USERNAME/.ssh/id_rsa
+mkdir -p /home/$AUSERNAME/.ssh
+echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$AUSERNAME/.ssh/id_rsa.pub
+echo $SSHPRIVATEDATA | base64 --d > /home/$AUSERNAME/.ssh/id_rsa
+chown $AUSERNAME /home/$AUSERNAME/.ssh/id_rsa.pub
+chmod 600 /home/$AUSERNAME/.ssh/id_rsa.pub
+chown $AUSERNAME /home/$AUSERNAME/.ssh/id_rsa
+chmod 600 /home/$AUSERNAME/.ssh/id_rsa
 
 mkdir -p /root/.ssh
 echo $SSHPRIVATEDATA | base64 --d > /root/.ssh/id_rsa
@@ -50,14 +50,14 @@ Hostname=localhost
 UseTLS=YES
 UseSTARTTLS=Yes
 FromLineOverride=YES #TO CHANGE FROM EMAIL
-Root=${USERNAME}@gmail.com # Redirect root email
-AuthUser=${USERNAME}@gmail.com
+Root=${AUSERNAME}@gmail.com # Redirect root email
+AuthUser=${AUSERNAME}@gmail.com
 AuthPass=${PASSWORD}
 AuthMethod=LOGIN
 RewriteDomain=gmail.com
 EOF
 cat <<EOF > /etc/ssmtp/revaliases
-root:${USERNAME}@gmail.com:smtp.gmail.com:587 
+root:${AUSERNAME}@gmail.com:smtp.gmail.com:587 
 EOF
 echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RESOURCEGROUP} Bastion Software Install" ${RHNUSERNAME} &
 # Continue Setting Up Bastion
@@ -103,8 +103,8 @@ openshift_router_selector='region=infra'
 openshift_registry_selector='region=infra'
 
 ansible_become=yes
-ansible_ssh_user=${USERNAME}
-remote_user=${USERNAME}
+ansible_ssh_user=${AUSERNAME}
+remote_user=${AUSERNAME}
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
 openshift_use_dnsmasq=False
@@ -148,9 +148,9 @@ bastion
 EOF
 
 mkdir -p /etc/origin/master
-htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+htpasswd -cb /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
 
-cat <<EOF > /home/${USERNAME}/subscribe.yml
+cat <<EOF > /home/${AUSERNAME}/subscribe.yml
 ---
 - hosts: all
   vars:
@@ -229,7 +229,7 @@ cat <<EOF > /home/${USERNAME}/subscribe.yml
 EOF
 
 
-cat <<EOF > /home/${USERNAME}/postinstall.yml
+cat <<EOF > /home/${AUSERNAME}/postinstall.yml
 ---
 - hosts: masters
   vars:
@@ -238,30 +238,32 @@ cat <<EOF > /home/${USERNAME}/postinstall.yml
   - name: Create Master Directory
     file: path=/etc/origin/master state=directory
   - name: add initial user to OpenShift Enterprise
-    shell: htpasswd -c -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+    shell: htpasswd -c -b /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
 
 EOF
 
-cat <<EOF > /home/${USERNAME}/openshift-install.sh
+cat <<EOF > /home/${AUSERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-playbook /home/${USERNAME}/subscribe.yml
+ansible-playbook /home/${AUSERNAME}/subscribe.yml
 ansible all --module-name=ping > ansible-preinstall-ping.out
+echo "${RESOURCEGROUP} Bastion Host is starting ansible BYO" | mail -s "${RESOURCEGROUP} Bastion BYO Install" ${RHNUSERNAME} &
 ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
 # ssh gwest@master1 oadm registry --selector=region=infra
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
-ansible-playbook /home/${USERNAME}/postinstall.yml
+ansible-playbook /home/${AUSERNAME}/postinstall.yml
 cd /root
 mkdir .kube
-scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${USERNAME}@master1:~/.kube/config /tmp/kube-config
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${AUSERNAME}@master1:~/.kube/config /tmp/kube-config
 cp /tmp/kube-config /root/.kube/config
-mkdir /home/${USERNAME}/.kube
-cp /tmp/kube-config /home/${USERNAME}/.kube/config
-chown --recursive ${USERNAME} /home/${USERNAME}/.kube
+mkdir /home/${AUSERNAME}/.kube
+cp /tmp/kube-config /home/${AUSERNAME}/.kube/config
+chown --recursive ${AUSERNAME} /home/${AUSERNAME}/.kube
 rm -f /tmp/kube-config
+echo "${RESOURCEGROUP} Installation Is Complete" | mail -s "${RESOURCEGROUP} Install Complete" ${RHNUSERNAME} &
 EOF
 
-cat <<EOF > /home/${USERNAME}/.ansible.cfg
+cat <<EOF > /home/${AUSERNAME}/.ansible.cfg
 [defaults]
 remote_tmp     = ~/.ansible/tmp
 local_tmp      = ~/.ansible/tmp
@@ -273,7 +275,7 @@ timeout=240
 control_path = ~/.ansible/cp/ssh%%h-%%p-%%r
 ssh_args = -o ControlMaster=auto -o ControlPersist=600s -o ControlPath=~/.ansible/cp-%h-%p-%r
 EOF
-chown ${USERNAME} /home/${USERNAME}/.ansible.cfg
+chown ${AUSERNAME} /home/${AUSERNAME}/.ansible.cfg
   
 cat <<EOF > /root/.ansible.cfg
 [defaults]
@@ -289,16 +291,16 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=600s -o ControlPath=~/.ansibl
 EOF
 
 
-cd /home/${USERNAME}
+cd /home/${AUSERNAME}
 
 sleep 120
 ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
 ansible all --module-name=ping > ansible1.out
 ansible all --module-name=ping > ansible2.out
 
-chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
-chmod 755 /home/${USERNAME}/openshift-install.sh
+chown ${AUSERNAME} /home/${AUSERNAME}/openshift-install.sh
+chmod 755 /home/${AUSERNAME}/openshift-install.sh
 echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install" ${RHNUSERNAME} &
-/home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
+/home/${AUSERNAME}/openshift-install.sh &> /home/${AUSERNAME}/openshift-install.out &
 exit 0
 
