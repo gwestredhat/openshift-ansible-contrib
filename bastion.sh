@@ -34,6 +34,7 @@ chmod 600 /root/.ssh/id_rsa
 
 sleep 30
 # Setup ssmtp mta agent for use with gmail
+yum -y install wget
 wget -c https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
 rpm -ivh epel-release-7-8.noarch.rpm
 yum -y install ssmtp
@@ -58,7 +59,7 @@ EOF
 cat <<EOF > /etc/ssmtp/revaliases
 root:${USERNAME}@gmail.com:smtp.gmail.com:587 
 EOF
-echo "${RESOURCEGROUP} Bastion Host is starting software update" | ssmtp -s "${RESOURCEGROUP} Bastion Software Install" ${USERNAME}@gmail.com
+echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RESOURCEGROUP} Bastion Software Install" ${RHNUSERNAME} &
 # Continue Setting Up Bastion
 subscription-manager unregister 
 yum -y remove RHEL7
@@ -69,7 +70,7 @@ subscription-manager repos --disable="*"
 subscription-manager repos     --enable="rhel-7-server-rpms"     --enable="rhel-7-server-extras-rpms"
 subscription-manager repos     --enable="rhel-7-server-ose-3.3-rpms"
 yum -y install atomic-openshift-utils
-yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
+yum -y install git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
 yum -y install docker
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
                                                                                          
@@ -299,7 +300,7 @@ ansible all --module-name=ping > ansible2.out
 
 chown ${USERNAME} /home/${USERNAME}/openshift-install.sh
 chmod 755 /home/${USERNAME}/openshift-install.sh
-echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | ssmtp -s "${RESOURCEGROUP} Openshift Install" ${USERNAME}@gmail.com
+echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install" ${RHNUSERNAME} &
 /home/${USERNAME}/openshift-install.sh &> /home/${USERNAME}/openshift-install.out &
 exit 0
 
