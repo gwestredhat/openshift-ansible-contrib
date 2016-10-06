@@ -33,6 +33,10 @@ chown root /root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 
 sleep 30
+cat <<EOF > /root/setup_ssmtp.sh
+# $1 = Gmail Account (Leave off @gmail.com ie user)
+# $2 = Gmail Password
+# $3 = Notification email address
 # Setup ssmtp mta agent for use with gmail
 yum -y install wget
 wget -c https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
@@ -41,7 +45,7 @@ yum -y install ssmtp
 alternatives --set mta  /usr/sbin/sendmail.ssmtp
 systemctl stop postfix
 systemctl disable postfix
-cat <<EOF > /etc/ssmtp/ssmtp.conf
+cat <<EOFZ > /etc/ssmtp/ssmtp.conf
 root=postmaster
 mailhub=mail
 TLS_CA_File=/etc/pki/tls/certs/ca-bundle.crt
@@ -50,15 +54,20 @@ Hostname=localhost
 UseTLS=YES
 UseSTARTTLS=Yes
 FromLineOverride=YES #TO CHANGE FROM EMAIL
-Root=${AUSERNAME}@gmail.com # Redirect root email
-AuthUser=${AUSERNAME}@gmail.com
-AuthPass=${PASSWORD}
+Root=${3} # Redirect root email
+AuthUser=${1}@gmail.com
+AuthPass=${2}
 AuthMethod=LOGIN
 RewriteDomain=gmail.com
+EOFZ
+cat <<EOFZ > /etc/ssmtp/revaliases
+root:${1}@gmail.com:smtp.gmail.com:587 
+EOFZ
 EOF
-cat <<EOF > /etc/ssmtp/revaliases
-root:${AUSERNAME}@gmail.com:smtp.gmail.com:587 
-EOF
+chmod +x /root/setup_ssmtp.sh
+# Run in background so if error we dont fail deploy
+/root/setup_ssmtp.sh ${AUSERNAME} ${PASSWORD} ${RHNUSERNAME} &> /root/setup_ssmtp.out  &
+
 echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RESOURCEGROUP} Bastion Software Install" ${RHNUSERNAME} &
 # Continue Setting Up Bastion
 subscription-manager unregister 
@@ -147,8 +156,9 @@ store1
 bastion
 EOF
 
-mkdir -p /etc/origin/master
-htpasswd -cb /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
+# This is now done in ansible - so redundant
+#mkdir -p /etc/origin/master
+#htpasswd -cb /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
 
 cat <<EOF > /home/${AUSERNAME}/subscribe.yml
 ---
@@ -292,12 +302,6 @@ EOF
 
 
 cd /home/${AUSERNAME}
-
-sleep 120
-ssh -o StrictHostKeyChecking=no gwest@node01 ps > ps.out
-ansible all --module-name=ping > ansible1.out
-ansible all --module-name=ping > ansible2.out
-
 chown ${AUSERNAME} /home/${AUSERNAME}/openshift-install.sh
 chmod 755 /home/${AUSERNAME}/openshift-install.sh
 echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install" ${RHNUSERNAME} &
