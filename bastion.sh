@@ -68,7 +68,7 @@ chmod +x /root/setup_ssmtp.sh
 # Ignore Error If It Dont work
 /root/setup_ssmtp.sh ${AUSERNAME} ${PASSWORD} ${RHNUSERNAME} || true
 
-echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RESOURCEGROUP} Bastion Software Install" ${RHNUSERNAME} &
+echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RESOURCEGROUP} Bastion Software Install" ${RHNUSERNAME} || true
 # Continue Setting Up Bastion
 subscription-manager unregister 
 yum -y remove RHEL7
@@ -164,13 +164,10 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   vars:
     description: "Subscribe OSE"
   tasks:
-  - name: check connection
-    ping:
   - name: wait for .updateok
     wait_for: path=/root/.updateok
-  - name: Update all hosts via Azure Repos
-    shell: yum -y update 
-    ignore_errors: yes
+  - name: check connection
+    ping:
   - name: Get rid of rhui repos
     file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
   - name: Get rid of rhui Load balancers
@@ -262,7 +259,7 @@ until [ \${RET} -eq 0 ]; do
    RET=\$?
    sleep 10
 done
-echo "${RESOURCEGROUP} Bastion Host is starting ansible BYO" | mail -s "${RESOURCEGROUP} Bastion BYO Install" ${RHNUSERNAME} &
+echo "${RESOURCEGROUP} Bastion Host is starting ansible BYO" | mail -s "${RESOURCEGROUP} Bastion BYO Install" ${RHNUSERNAME} || true
 ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
 # ssh gwest@master1 oadm registry --selector=region=infra
 # ssh gwest@master1 oadm router --selector=region=infra
@@ -276,7 +273,7 @@ mkdir /home/${AUSERNAME}/.kube
 cp /tmp/kube-config /home/${AUSERNAME}/.kube/config
 chown --recursive ${AUSERNAME} /home/${AUSERNAME}/.kube
 rm -f /tmp/kube-config
-echo "${RESOURCEGROUP} Installation Is Complete" | mail -s "${RESOURCEGROUP} Install Complete" ${RHNUSERNAME} &
+echo "${RESOURCEGROUP} Installation Is Complete" | mail -s "${RESOURCEGROUP} Install Complete" ${RHNUSERNAME} || true
 EOF
 
 cat <<EOF > /home/${AUSERNAME}/.ansible.cfg
@@ -310,7 +307,7 @@ EOF
 cd /home/${AUSERNAME}
 chown ${AUSERNAME} /home/${AUSERNAME}/openshift-install.sh
 chmod 755 /home/${AUSERNAME}/openshift-install.sh
-echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install" ${RHNUSERNAME} &
+echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install" ${RHNUSERNAME} || true
 /home/${AUSERNAME}/openshift-install.sh &> /home/${AUSERNAME}/openshift-install.out &
 exit 0
 
