@@ -254,6 +254,7 @@ EOF
 
 cat <<EOF > /home/${AUSERNAME}/openshift-install.sh
 export ANSIBLE_HOST_KEY_CHECKING=False
+sleep 120
 ansible-playbook /home/${AUSERNAME}/subscribe.yml
 ansible all --module-name=ping > ansible-preinstall-ping.out
 echo "${RESOURCEGROUP} Bastion Host is starting ansible BYO" | mail -s "${RESOURCEGROUP} Bastion BYO Install" ${RHNUSERNAME} &
