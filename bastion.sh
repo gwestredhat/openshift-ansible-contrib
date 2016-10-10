@@ -169,7 +169,7 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   - name: wait for .updateok
     wait_for: path=/root/.updateok
   - name: Update all hosts via Azure Repos
-    yum: name=* state=latest
+    shell: yum -y update 
     ignore_errors: yes
   - name: Get rid of rhui repos
     file: path=/etc/yum.repos.d/rh-cloud.repo state=absent
