@@ -36,6 +36,7 @@ systemctl enable target
 systemctl restart target.service
 firewall-cmd --permanent --add-port=3260/tcp
 firewall-cmd --reload
+touch /root/.updateok
 parted --script -a optimal /dev/sdc mklabel gpt mkpart primary ext2 1M 100% set 1 lvm on
 parted --script -a optimal /dev/sdd mklabel gpt mkpart primary ext2 1M 100% set 1 lvm on
 parted --script -a optimal /dev/sde mklabel gpt mkpart primary ext2 1M 100% set 1 lvm on

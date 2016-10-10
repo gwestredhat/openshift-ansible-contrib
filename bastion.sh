@@ -81,6 +81,7 @@ subscription-manager repos     --enable="rhel-7-server-ose-3.3-rpms"
 yum -y install atomic-openshift-utils
 yum -y install git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
 yum -y install docker
+touch /root/.updateok
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
                                                                                          
 cat <<EOF > /etc/sysconfig/docker-storage-setup
@@ -156,9 +157,6 @@ store1
 bastion
 EOF
 
-# This is now done in ansible - so redundant
-#mkdir -p /etc/origin/master
-#htpasswd -cb /etc/origin/master/htpasswd ${AUSERNAME} ${PASSWORD}
 
 cat <<EOF > /home/${AUSERNAME}/subscribe.yml
 ---
@@ -168,6 +166,8 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   tasks:
   - name: check connection
     ping:
+  - Wait for the initial part of the startup scripts to be done
+    wait_for: path=/root/.updateok
   - name: Update all hosts via Azure Repos
     yum: name=* state=latest
     ignore_errors: yes

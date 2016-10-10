@@ -42,6 +42,8 @@ yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash
 yum -y install docker
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
                                                                                          
+touch /root/.updateok
+
 cat <<EOF > /etc/sysconfig/docker-storage-setup
 DEVS=/dev/sdc
 VG=docker-vg

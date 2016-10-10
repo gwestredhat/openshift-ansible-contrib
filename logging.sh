@@ -40,6 +40,8 @@ yum -y install atomic-openshift-utils
 yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
 yum -y install docker
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
+
+touch /root/.updateok
                                                                                          
 cat <<EOF > /etc/sysconfig/docker-storage-setup
 DEVS=/dev/sdc
@@ -50,43 +52,9 @@ docker-storage-setup
 systemctl enable docker
 systemctl start docker
 
-
-cat <<EOF > /etc/ansible/hosts
-[OSEv3:children]
-masters
-nodes
-
-[OSEv3:vars]
-rhn_user_name=${RHNUSERNAME}
-rhn_password=${RHNPASSWORD}
-rhn_pool_id=${RHNPOOLID}
-debug_level=2
-deployment_type=openshift-enterprise
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-
-ansible_sudo=true
-ansible_ssh_user=${USERNAME}
-remote_user=${USERNAME}
-
-openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
-openshift_use_dnsmasq=False
-openshift_public_hostname=${HOSTNAME}
-
-
-[masters]
-master 
-
-[nodes]
-master
-node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-EOF
-
-mkdir -p /etc/origin/master
-htpasswd -cb /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
-
 yum -y install cockpit
 systemctl enable --now cockpit.socket
 firewall-cmd --add-service=cockpit
 firewall-cmd --add-service=cockpit --permanent
+
 

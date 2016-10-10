@@ -12,4 +12,5 @@ EOF
 
 docker-storage-setup                                                                                                                                    
 systemctl enable docker
+touch /root/.updateok
 
