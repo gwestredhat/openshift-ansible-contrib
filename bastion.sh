@@ -1,18 +1,18 @@
 #!/bin/bash
 
-RESOURCEGROUP=$1
-AUSERNAME=$2
-PASSWORD=$3
-HOSTNAME=$4
-NODECOUNT=$5
-ROUTEREXTIP=$6
-RHNUSERNAME=$7
-RHNPASSWORD=$8
-RHNPOOLID=$9
-SSHPRIVATEDATA=${10}
-SSHPUBLICDATA=${11}
-SSHPUBLICDATA2=${12}
-SSHPUBLICDATA3=${13}
+export RESOURCEGROUP=$1
+export AUSERNAME=$2
+export PASSWORD=$3
+export HOSTNAME=$4
+export NODECOUNT=$5
+export ROUTEREXTIP=$6
+export RHNUSERNAME=$7
+export RHNPASSWORD=$8
+export RHNPOOLID=$9
+export SSHPRIVATEDATA=${10}
+export SSHPUBLICDATA=${11}
+export SSHPUBLICDATA2=${12}
+export SSHPUBLICDATA3=${13}
 
 ps -ef | grep bastion.sh > cmdline.out
 
@@ -34,9 +34,9 @@ chmod 600 /root/.ssh/id_rsa
 
 sleep 30
 cat <<EOF > /root/setup_ssmtp.sh
-# $1 = Gmail Account (Leave off @gmail.com ie user)
-# $2 = Gmail Password
-# $3 = Notification email address
+# \$1 = Gmail Account (Leave off @gmail.com ie user)
+# \$2 = Gmail Password
+# \$3 = Notification email address
 # Setup ssmtp mta agent for use with gmail
 yum -y install wget
 wget -c https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
@@ -54,19 +54,19 @@ Hostname=localhost
 UseTLS=YES
 UseSTARTTLS=Yes
 FromLineOverride=YES #TO CHANGE FROM EMAIL
-Root=${3} # Redirect root email
-AuthUser=${1}@gmail.com
-AuthPass=${2}
+Root=\${3} # Redirect root email
+AuthUser=\${1}@gmail.com
+AuthPass=\${2}
 AuthMethod=LOGIN
 RewriteDomain=gmail.com
 EOFZ
 cat <<EOFZ > /etc/ssmtp/revaliases
-root:${1}@gmail.com:smtp.gmail.com:587 
+root:\${1}@gmail.com:smtp.gmail.com:587
 EOFZ
 EOF
 chmod +x /root/setup_ssmtp.sh
-# Run in background so if error we dont fail deploy
-/root/setup_ssmtp.sh ${AUSERNAME} ${PASSWORD} ${RHNUSERNAME} &> /root/setup_ssmtp.out  &
+# Ignore Error If It Dont work
+/root/setup_ssmtp.sh ${AUSERNAME} ${PASSWORD} ${RHNUSERNAME} || true
 
 echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RESOURCEGROUP} Bastion Software Install" ${RHNUSERNAME} &
 # Continue Setting Up Bastion
