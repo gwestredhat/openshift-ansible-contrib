@@ -166,7 +166,7 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   tasks:
   - name: check connection
     ping:
-  - Wait for the initial part of the startup scripts to be done
+  - name: wait for .updateok
     wait_for: path=/root/.updateok
   - name: Update all hosts via Azure Repos
     yum: name=* state=latest
