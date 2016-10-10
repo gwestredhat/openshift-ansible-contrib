@@ -258,7 +258,7 @@ sleep 120
 ansible all --module-name=ping > ansible-preinstall-ping.out
 RET=1
 until [ \${RET} -eq 0 ]; do
-   ansible-playbook /home/${AUSERNAME}/subscribe.yml
+   ansible-playbook -vvv /home/${AUSERNAME}/subscribe.yml
    RET=\$?
    sleep 10
 done
