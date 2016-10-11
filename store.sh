@@ -79,3 +79,4 @@ rm -f /tmp/kube-config
 ./ose_pvcreate_lun vg1 50 4 
 ./ose_pvcreate_lun vg1 1 400 
 systemctl restart target.service
+reboot --no-wall --force

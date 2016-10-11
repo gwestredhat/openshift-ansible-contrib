@@ -203,6 +203,10 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     yum: name=PyYAML state=latest
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
+  - name: Wait for Things to Settle
+    prompt:  minutes=10
+  - name: Update all hosts
+    yum: name=* state=latest
 EOF
 
 cat <<EOF > /home/${AUSERNAME}/setupiscsi.yml
@@ -237,8 +241,6 @@ cat <<EOF > /home/${AUSERNAME}/setupiscsi.yml
     retries: 10
     delay: 30
     ignore_errors: yes
-  - name: Update all hosts
-    yum: name=* state=latest
 EOF
 
 
@@ -308,9 +310,8 @@ EOF
 
 
 cd /home/${AUSERNAME}
-chown ${AUSERNAME} /home/${AUSERNAME}/openshift-install.sh
 chmod 755 /home/${AUSERNAME}/openshift-install.sh
-echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install" ${RHNUSERNAME} || true
+echo "${RESOURCEGROUP} Bastion Host is starting Openshift Install" | mail -s "${RESOURCEGROUP} Bastion Openshift Install Starting" ${RHNUSERNAME} || true
 /home/${AUSERNAME}/openshift-install.sh &> /home/${AUSERNAME}/openshift-install.out &
 exit 0
 
