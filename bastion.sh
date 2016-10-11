@@ -203,6 +203,13 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     yum: name=PyYAML state=latest
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
+EOF
+
+cat <<EOF > /home/${AUSERNAME}/setupiscsi.yml
+- hosts: all
+  vars:
+    description: "Subscribe OSE"
+  tasks:
   - name: Install iscsi initiator utils
     yum: name=iscsi-initiator-utils state=latest
   - name: add new initiator name
@@ -232,7 +239,6 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     ignore_errors: yes
   - name: Update all hosts
     yum: name=* state=latest
-
 EOF
 
 
@@ -260,6 +266,7 @@ ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml 
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
 ansible-playbook /home/${AUSERNAME}/postinstall.yml
+ansible-playbook /home/${AUSERNAME}/setupiscsi.yml
 cd /root
 mkdir .kube
 scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${AUSERNAME}@master1:~/.kube/config /tmp/kube-config
@@ -268,6 +275,7 @@ mkdir /home/${AUSERNAME}/.kube
 cp /tmp/kube-config /home/${AUSERNAME}/.kube/config
 chown --recursive ${AUSERNAME} /home/${AUSERNAME}/.kube
 rm -f /tmp/kube-config
+ansible-playbook /home/${AUSERNAME}/setupiscsi.yml
 echo "${RESOURCEGROUP} Installation Is Complete" | mail -s "${RESOURCEGROUP} Install Complete" ${RHNUSERNAME} || true
 EOF
 
