@@ -204,7 +204,7 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
   - name: Wait for Things to Settle
-    prompt:  minutes=10
+    pause:  minutes=10
   - name: Update all hosts
     yum: name=* state=latest
 EOF
