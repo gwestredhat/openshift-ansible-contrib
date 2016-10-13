@@ -203,10 +203,12 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     yum: name=PyYAML state=latest
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
-  - name: Wait for Things to Settle
-    pause:  minutes=10
   - name: Update all hosts
-    yum: name=* state=latest
+    command: yum -y update
+    async: 1200
+    poll: 10
+  - name: Wait for Things to Settle
+    pause:  minutes=5
 EOF
 
 cat <<EOF > /home/${AUSERNAME}/setupiscsi.yml
