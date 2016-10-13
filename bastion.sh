@@ -154,7 +154,6 @@ infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
 [misc]
 store1
-bastion
 EOF
 
 
