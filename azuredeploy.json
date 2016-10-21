@@ -413,7 +413,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -487,7 +487,7 @@
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode1')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -527,7 +527,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -599,7 +599,7 @@
         "[resourceId('Microsoft.Resources/deployments', 'master1')]",
         "[resourceId('Microsoft.Resources/deployments', 'master2')]",
         "[resourceId('Microsoft.Resources/deployments', 'master3')]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode')]"
+        "[resourceId('Microsoft.Resources/deployments', 'infranode1')]"
       ],
       "properties" : {
         "mode" : "Incremental",
@@ -639,7 +639,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -666,7 +666,7 @@
       "dependsOn" : [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'infranode')]",
+        "[resourceId('Microsoft.Resources/deployments', 'infranode1')]",
         "[resourceId('Microsoft.Resources/deployments', 'logging')]"
       ],
       "properties" : {
@@ -707,7 +707,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
@@ -774,7 +774,7 @@
             "value" : "[variables('baseTemplateUrl')]"
           },
           "routerExtIP" : {
-            "value" : "[reference('infranode').outputs.pip.value]"
+            "value" : "[reference('infranode1').outputs.pip.value]"
           },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
