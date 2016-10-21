@@ -11,7 +11,7 @@
     "sshKeyData" : {
       "value" : ""
     },
-    "masterDnsName" : {
+    "WildcardZone" : {
       "value" : ""
     },
     "numberOfNodes" : {
