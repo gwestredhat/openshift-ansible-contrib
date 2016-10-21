@@ -980,59 +980,6 @@
     {
       "apiVersion" : "[variables('tmApiVersion')]",
       "type" : "Microsoft.Network/trafficManagerProfiles",
-      "name" : "MasterLB",
-      "location" : "global",
-      "dependsOn" : [
-        "[resourceId('Microsoft.Resources/deployments', 'master1')]",
-        "[resourceId('Microsoft.Resources/deployments', 'master2')]",
-        "[resourceId('Microsoft.Resources/deployments', 'master3')]"
-      ],
-      "properties" : {
-        "profileStatus" : "Enabled",
-        "trafficRoutingMethod" : "Weighted",
-        "dnsConfig" : {
-          "relativeName" : "[resourceGroup().name]",
-          "ttl" : 30
-        },
-        "monitorConfig" : {
-          "protocol" : "https",
-          "port" : 8443,
-          "path" : "/api"
-        },
-        "endpoints" : [
-          {
-            "name" : "endpoint0",
-            "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
-            "properties" : {
-              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master1pip')]",
-              "endpointStatus" : "Enabled",
-              "weight" : 1
-            }
-          },
-          {
-            "name" : "endpoint1",
-            "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
-            "properties" : {
-              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master2pip')]",
-              "endpointStatus" : "Enabled",
-              "weight" : 2
-            }
-          },
-          {
-            "name" : "endpoint2",
-            "type" : "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
-            "properties" : {
-              "targetResourceId" : "[resourceId('Microsoft.Network/publicIPAddresses', 'master3pip')]",
-              "endpointStatus" : "Enabled",
-              "weight" : 3
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion" : "[variables('tmApiVersion')]",
-      "type" : "Microsoft.Network/trafficManagerProfiles",
       "name" : "AppLB",
       "location" : "global",
       "dependsOn" : [
