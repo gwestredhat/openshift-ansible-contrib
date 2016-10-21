@@ -1095,7 +1095,7 @@
     },
     "Openshift Router Public IP" : {
       "type" : "string",
-      "value" : "[reference('infranode').outputs.pip.value]"
+      "value" : "[reference('infranode1').outputs.pip.value]"
     }
   }
 }
