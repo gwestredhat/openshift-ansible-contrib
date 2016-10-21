@@ -548,7 +548,7 @@
       }
     },
     {
-      "name" : "infranode",
+      "name" : "infranode1",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
@@ -563,7 +563,7 @@
         },
         "parameters" : {
           "vmName" : {
-            "value" : "infranode"
+            "value" : "infranode1"
           },
           "sa" : {
             "value" : "[variables('infranodeStorageName')]"
@@ -889,6 +889,90 @@
           },
           "sshPrivateData" : {
             "value" : "[parameters('sshPrivateData')]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "infranode2",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriInfranode')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "infranode2"
+          },
+          "sa" : {
+            "value" : "[variables('infranodeStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('infranodeSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('infranodeVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
+          }
+        }
+      }
+    },
+    {
+      "name" : "infranode3",
+      "type" : "Microsoft.Resources/deployments",
+      "apiVersion" : "2013-03-01",
+      "dependsOn" : [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('infranodeStorageName'))]"
+      ],
+      "properties" : {
+        "mode" : "Incremental",
+        "templateLink" : {
+          "uri" : "[variables('baseVMachineTemplateUriInfranode')]",
+          "contentVersion" : "1.0.0.0"
+        },
+        "parameters" : {
+          "vmName" : {
+            "value" : "infranode3"
+          },
+          "sa" : {
+            "value" : "[variables('infranodeStorageName')]"
+          },
+          "subnetRef" : {
+            "value" : "[variables('infranodeSubnetRef')]"
+          },
+          "vmSize" : {
+            "value" : "[parameters('infranodeVMSize')]"
+          },
+          "adminUsername" : {
+            "value" : "[parameters('adminUsername')]"
+          },
+          "sshKeyData" : {
+            "value" : "[parameters('sshKeyData')]"
+          },
+          "baseTemplateUrl" : {
+            "value" : "[variables('baseTemplateUrl')]"
+          },
+          "imageReference" : {
+            "value" : "[variables(parameters('image'))]"
           }
         }
       }

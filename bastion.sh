@@ -149,7 +149,9 @@ master1 openshift_node_labels="{'region':'master','zone':'default'}"
 master2 openshift_node_labels="{'region':'master','zone':'default'}" 
 master3 openshift_node_labels="{'region':'master','zone':'default'}" 
 node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+infranode1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+infranode2 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+infranode3 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
 
 [misc]
