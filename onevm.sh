@@ -14,7 +14,7 @@ export SSHPUBLICDATA=${11}
 export SSHPUBLICDATA2=${12}
 export SSHPUBLICDATA3=${13}
 
-ps -ef | grep bastion.sh > cmdline.out
+ps -ef | grep onevm.sh > cmdline.out
 
 mkdir -p /home/$AUSERNAME/.ssh
 echo $SSHPUBLICDATA $SSHPUBLICDATA2 $SSHPUBLICDATA3 >  /home/$AUSERNAME/.ssh/id_rsa.pub
@@ -96,10 +96,7 @@ systemctl start docker
 
 cat <<EOF > /etc/ansible/hosts
 [OSEv3:children]
-masters
-etcd
-nodes
-misc
+onevm
 
 [OSEv3:vars]
 azure_resource_group=${RESOURCEGROUP}
@@ -118,11 +115,11 @@ remote_user=${AUSERNAME}
 
 openshift_master_default_subdomain=${ROUTEREXTIP}.xip.io 
 openshift_use_dnsmasq=False
-openshift_public_hostname=${RESOURCEGROUP}.trafficmanager.net
+openshift_public_hostname=${ROUTEREXTIP}.xip.io
 
-openshift_master_cluster_method=native
-openshift_master_cluster_hostname=${RESOURCEGROUP}.trafficmanager.net
-openshift_master_cluster_public_hostname=${RESOURCEGROUP}.trafficmanager.net
+#openshift_master_cluster_method=native
+openshift_master_cluster_hostname=${ROUTEREXTIP}.xip.io
+openshift_master_cluster_public_hostname=${ROUTEREXTIP}.xip.io
 
 # Enable cockpit
 osm_use_cockpit=true
@@ -132,30 +129,19 @@ osm_cockpit_plugins=['cockpit-kubernetes']
 
 # default storage plugin dependencies to install, by default the ceph and
 # glusterfs plugin dependencies will be installed, if available.
-osn_storage_plugin_deps=['iscsi']
+#osn_storage_plugin_deps=['iscsi']
 
 [masters]
-master1 openshift_node_labels="{'role': 'master'}"
-master2 openshift_node_labels="{'role': 'master'}"
-master3 openshift_node_labels="{'role': 'master'}"
+onevm openshift_node_labels="{'role': 'master'}"
 
 [etcd]
-master1
-master2
-master3
+onevm
 
 [nodes]
-master1 openshift_node_labels="{'region':'master','zone':'default'}" 
-master2 openshift_node_labels="{'region':'master','zone':'default'}" 
-master3 openshift_node_labels="{'region':'master','zone':'default'}" 
-node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
-infranode1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-infranode2 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-infranode3 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+onevm openshift_node_labels="{'region':'master','zone':'default','region':'infra'}" 
 
 
 [misc]
-store1
 EOF
 
 
@@ -165,8 +151,6 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   vars:
     description: "Subscribe OSE"
   tasks:
-  - name: wait for .updateok
-    wait_for: path=/root/.updateok
   - name: check connection
     ping:
   - name: Get rid of rhui repos
@@ -212,40 +196,6 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     pause:  minutes=5
 EOF
 
-cat <<EOF > /home/${AUSERNAME}/setupiscsi.yml
-- hosts: all
-  vars:
-    description: "Subscribe OSE"
-  tasks:
-  - name: Install iscsi initiator utils
-    yum: name=iscsi-initiator-utils state=latest
-  - name: add new initiator name
-    lineinfile: dest=/etc/iscsi/initiatorname.iscsi create=yes regexp="InitiatorName=*" line="InitiatorName=iqn.2016-02.local.azure.nodes" state=present
-  - name: restart iscsid service
-    shell: systemctl restart iscsi
-    ignore_errors: yes
-  - name: Enable Iscsi
-    shell: systemctl enable iscsi
-    ignore_errors: yes
-  - name: Start iScsi Initiator  Service
-    shell: systemctl start iscsi
-    ignore_errors: yes
-  - name: Discover Devices on Iscsi  All Hosts
-    shell: iscsiadm --mode discovery --type sendtargets --portal store1
-    register: task_result
-    until: task_result.rc == 0
-    retries: 10
-    delay: 30
-    ignore_errors: yes
-  - name: Login All Hosts
-    shell: iscsiadm --mode node --portal store1 --login
-    register: task_result
-    until: task_result.rc == 0
-    retries: 10
-    delay: 30
-    ignore_errors: yes
-EOF
-
 
 cat <<EOF > /home/${AUSERNAME}/postinstall.yml
 ---
@@ -271,7 +221,6 @@ ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml 
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
 ansible-playbook /home/${AUSERNAME}/postinstall.yml
-ansible-playbook /home/${AUSERNAME}/setupiscsi.yml
 cd /root
 mkdir .kube
 scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${AUSERNAME}@master1:~/.kube/config /tmp/kube-config
