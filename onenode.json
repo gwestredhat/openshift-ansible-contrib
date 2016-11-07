@@ -206,7 +206,7 @@
       }
     },
     {
-      "name" : "onenode",
+      "name" : "onevm",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
       "dependsOn" : [
