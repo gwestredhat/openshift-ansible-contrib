@@ -21,13 +21,11 @@
         "description" : "SSH rsa public key file as a string."
       }
     },
-    "numberOfNodes" : {
-      "type" : "int",
-      "defaultValue" : 3,
-      "minValue" : 3,
-      "maxValue" : 30,
+    "WildcardZone" : {
+      "type" : "string",
+      "minLength" : 1,
       "metadata" : {
-        "description" : "Number of Openshift Nodes to deploy (max 30)"
+        "description" : "Globally unique wildcard dns domain fo app access."
       }
     },
     "image" : {
@@ -41,9 +39,9 @@
         "description" : "OS to use. Centos or Redhat Enterprise Linux"
       }
     },
-    "nodeVMSize" : {
+    "masterVMSize" : {
       "type" : "string",
-      "defaultValue" : "Standard_DS12",
+      "defaultValue" : "Standard_DS3",
       "allowedValues" : [
         "Standard_A0",
         "Standard_A1",
@@ -94,7 +92,7 @@
         "Standard_GS5"
       ],
       "metadata" : {
-        "description" : "The size of the each Node Virtual Machine."
+        "description" : "The size of the Master Virtual Machine."
       }
     },
     "RHNUserName" : {
@@ -122,22 +120,10 @@
       "metadata" : {
         "description" : "SSH rsa private key file as a base64 string."
       }
-    },
-    "StartingNodeNumber" : {
-      "type" : "int",
-      "defaultValue" : 4,
-      "minValue" : 1,
-      "maxValue" : 30,
-      "metadata" : {
-        "description" : "Number of Openshift Nodes to deploy (max 30)"
-      }
     }
   },
   "variables" : {
     "baseTemplateUrl" : "https://raw.githubusercontent.com/glennswest/azure-openshift/master/",
-    "baseVMachineTemplateUriInfranode" : "[concat(variables('baseTemplateUrl'), 'infranode.json')]",
-    "baseVMachineTemplateUriNode" : "[concat(variables('baseTemplateUrl'), 'node.json')]",
-    "baseVMachineTemplateUriMaster" : "[concat(variables('baseTemplateUrl'), 'master.json')]",
     "location" : "[resourceGroup().location]",
     "virtualNetworkName" : "openshiftVnet",
     "addressPrefix" : "10.0.0.0/16",
@@ -148,7 +134,6 @@
     "mastersubnetName" : "masterSubnet",
     "mastersubnetPrefix" : "10.0.0.0/24",
     "apiVersion" : "2015-06-15",
-    "infranodeStorageName" : "[concat(uniqueString(resourceGroup().id), 'infranodesa')]",
     "nodeStorageName" : "[concat(uniqueString(resourceGroup().id), 'nodesa')]",
     "masterStorageName" : "[concat(uniqueString(resourceGroup().id), 'mastersa')]",
     "vhdStorageType" : "Standard_LRS",
@@ -168,15 +153,13 @@
       "sku" : "7.2",
       "version" : "latest"
     },
-    "baseVMachineTemplateUriBastion" : "[concat(variables('baseTemplateUrl'), 'bastion.json')]",
-    "baseVMachineTemplateUriLogging" : "[concat(variables('baseTemplateUrl'), 'logging.json')]",
-    "tmApiVersion" : "2015-11-01",
-    "baseVMachineTemplateUriStore" : "[concat(variables('baseTemplateUrl'), 'store.json')]"
+    "baseVMachineTemplateUriOneVm" : "[concat(variables('baseTemplateUrl'), 'onevm.json')]",
+    "tmApiVersion" : "2015-11-01"
   },
   "resources" : [
     {
       "type" : "Microsoft.Storage/storageAccounts",
-      "name" : "[variables('nodeStorageName')]",
+      "name" : "[variables('masterStorageName')]",
       "apiVersion" : "[variables('apiVersion')]",
       "location" : "[variables('location')]",
       "tags" : {
@@ -187,37 +170,76 @@
       }
     },
     {
-      "name" : "[concat('nodeSet', copyindex())]",
+      "apiVersion" : "[variables('apiVersion')]",
+      "type" : "Microsoft.Network/virtualNetworks",
+      "name" : "[variables('virtualNetworkName')]",
+      "location" : "[variables('location')]",
+      "tags" : {
+        "displayName" : "VirtualNetwork"
+      },
+      "properties" : {
+        "addressSpace" : {
+          "addressPrefixes" : [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets" : [
+          {
+            "name" : "[variables('infranodesubnetName')]",
+            "properties" : {
+              "addressPrefix" : "[variables('infranodesubnetPrefix')]"
+            }
+          },
+          {
+            "name" : "[variables('nodesubnetName')]",
+            "properties" : {
+              "addressPrefix" : "[variables('nodesubnetPrefix')]"
+            }
+          },
+          {
+            "name" : "[variables('mastersubnetName')]",
+            "properties" : {
+              "addressPrefix" : "[variables('mastersubnetPrefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name" : "onenode",
       "type" : "Microsoft.Resources/deployments",
       "apiVersion" : "2013-03-01",
-      "copy" : {
-        "name" : "nodeSet",
-        "count" : "[parameters('numberOfNodes')]"
-      },
       "dependsOn" : [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('nodeStorageName'))]"
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('masterStorageName'))]"
       ],
       "properties" : {
         "mode" : "Incremental",
         "templateLink" : {
-          "uri" : "[variables('baseVMachineTemplateUriNode')]",
+          "uri" : "[variables('baseVMachineTemplateUriOneVm')]",
           "contentVersion" : "1.0.0.0"
         },
         "parameters" : {
           "vmName" : {
-            "value" : "[concat('node', padLeft(add(copyindex(parameters('StartingNodeNumber'), 1), 2, '0'))]"
+            "value" : "onevm"
+          },
+          "dnsName" : {
+            "value" : "[resourceGroup().name]"
           },
           "sa" : {
-            "value" : "[variables('nodeStorageName')]"
+            "value" : "[variables('masterStorageName')]"
           },
           "subnetRef" : {
-            "value" : "[variables('nodeSubnetRef')]"
+            "value" : "[variables('masterSubnetRef')]"
           },
           "vmSize" : {
-            "value" : "[parameters('nodeVMSize')]"
+            "value" : "[parameters('masterVMSize')]"
           },
           "adminUsername" : {
             "value" : "[parameters('adminUsername')]"
+          },
+          "adminPassword" : {
+            "value" : "[parameters('adminPassword')]"
           },
           "sshKeyData" : {
             "value" : "[parameters('sshKeyData')]"
@@ -225,12 +247,40 @@
           "baseTemplateUrl" : {
             "value" : "[variables('baseTemplateUrl')]"
           },
+          "routerExtIP" : {
+            "value" : "[reference('onevm').outputs.pip.value]"
+          },
           "imageReference" : {
             "value" : "[variables(parameters('image'))]"
+          },
+          "RHNUserName" : {
+            "value" : "[parameters('RHNUserName')]"
+          },
+          "RHNPassword" : {
+            "value" : "[parameters('RHNPassword')]"
+          },
+          "SubscriptionPoolId" : {
+            "value" : "[parameters('SubscriptionPoolId')]"
+          },
+          "sshPrivateData" : {
+            "value" : "[parameters('sshPrivateData')]"
           }
         }
       }
     }
   ],
-  "outputs" : {}
+  "outputs" : {
+    "Openshift Webconsole" : {
+      "type" : "string",
+      "value" : "[concat('https://', reference('onevm').outputs.fqdn.value, ':8443')]"
+    },
+    "Openshift Master ssh" : {
+      "type" : "string",
+      "value" : "[concat('ssh -A ', reference('onevm').outputs.pip.value)]"
+    },
+    "Openshift Router Public IP" : {
+      "type" : "string",
+      "value" : "[reference('onevm').outputs.pip.value]"
+    }
+  }
 }
