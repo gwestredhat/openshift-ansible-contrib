@@ -73,6 +73,9 @@ echo "${RESOURCEGROUP} Bastion Host is starting software update" | mail -s "${RE
 subscription-manager unregister 
 yum -y remove RHEL7
 rm -f /etc/yum.repos.d/rh-cloud.repo
+# Found that wildcard disable not working all the time - make sure
+yum-config-manager --disable epel
+yum-config-manager --disable epel-testing
 subscription-manager register --username $RHNUSERNAME --password $RHNPASSWORD
 subscription-manager attach --pool=$RHNPOOLID
 subscription-manager repos --disable="*"
