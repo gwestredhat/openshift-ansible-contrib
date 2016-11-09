@@ -156,6 +156,11 @@ infranode1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 infranode2 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 infranode3 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 
+[quotanodes]
+master1 openshift_node_labels="{'region':'master','zone':'default'}" 
+master2 openshift_node_labels="{'region':'master','zone':'default'}" 
+master3 openshift_node_labels="{'region':'master','zone':'default'}" 
+node[01:${NODECOUNT}] openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 
 [misc]
 store1
@@ -207,8 +212,6 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     yum: name=PyYAML state=latest
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
-  - name: Update Mount to Handle Quota
-    mount: fstype=xfs name=/var/lib/origin/openshift.local/volumes src=/dev/sdd option="gquota" state="mounted"
   - name: Update all hosts
     command: yum -y update
     async: 1200
@@ -216,6 +219,17 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
   - name: Wait for Things to Settle
     pause:  minutes=5
 EOF
+
+cat <<EOF > /home/${AUSERNAME}/quota.yml
+---
+- hosts: quotanodes
+  vars:
+    description: "Fix EP Storage/Quota"
+  tasks:
+  - name: Update Mount to Handle Quota
+    mount: fstype=xfs name=/var/lib/origin/openshift.local/volumes src=/dev/sdd option="gquota" state="mounted"
+EOF
+
 
 cat <<EOF > /home/${AUSERNAME}/setupiscsi.yml
 - hosts: all
@@ -272,9 +286,11 @@ ansible all --module-name=ping > ansible-preinstall-ping.out || true
 ansible-playbook  /home/${AUSERNAME}/subscribe.yml
 echo "${RESOURCEGROUP} Bastion Host is starting ansible BYO" | mail -s "${RESOURCEGROUP} Bastion BYO Install" ${RHNUSERNAME} || true
 ansible-playbook  /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml < /dev/null &> byo.out
+
 # ssh gwest@master1 oadm registry --selector=region=infra
 # ssh gwest@master1 oadm router --selector=region=infra
 wget http://master1:8443/api > healtcheck.out
+ansible-playbook /home/${AUSERNAME}/quota.yml
 ansible-playbook /home/${AUSERNAME}/postinstall.yml
 ansible-playbook /home/${AUSERNAME}/setupiscsi.yml
 cd /root
