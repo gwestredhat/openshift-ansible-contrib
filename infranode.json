@@ -120,6 +120,16 @@
               "vhd" : {
                 "uri" : "[concat('http://', parameters('sa'), '.blob.core.windows.net/openshiftvmachines/', parameters('vmName'), '_datadisk1.vhd')]"
               }
+            },
+            {
+              "caching" : "None",
+              "createOption" : "Empty",
+              "diskSizeGB" : "128",
+              "lun" : 1,
+              "name" : "datadisk2",
+              "vhd" : {
+                "uri" : "[concat('http://', parameters('sa'), '.blob.core.windows.net/openshiftvmachines/', parameters('vmName'), '_datadisk2.vhd')]"
+              }
             }
           ]
         },

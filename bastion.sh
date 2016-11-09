@@ -207,6 +207,8 @@ cat <<EOF > /home/${AUSERNAME}/subscribe.yml
     yum: name=PyYAML state=latest
   - name: Install the ose client
     yum: name=atomic-openshift-clients state=latest
+  - name: Update Mount to Handle Quota
+    mount: fstype=xfs name=/var/lib/origin/openshift.local/volumes src=/dev/sdd option="gquota" state="mounted"
   - name: Update all hosts
     command: yum -y update
     async: 1200
