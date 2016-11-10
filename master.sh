@@ -47,6 +47,7 @@ touch /root/.updateok
 cat <<EOF > /etc/sysconfig/docker-storage-setup
 DEVS=/dev/sdc
 VG=docker-vg
+EXTRA_DOCKER_STORAGE_OPTIONS="--storage-opt dm.basesize=3G"
 EOF
 
 docker-storage-setup                                                                                                                                    
