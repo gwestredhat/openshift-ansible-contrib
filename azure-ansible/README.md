@@ -1,6 +1,6 @@
 # RedHat Openshift Enterprise cluster on Azure
 
-When creating the RedHat Openshift Enterprise Cluster on Azure, you will need a SSH RSA key for access. 
+When creating the RedHat Openshift Enterprise Cluster on Azure, you will need a SSH RSA key for access.
 
 ## SSH Key Generation
 
@@ -11,27 +11,27 @@ When creating the RedHat Openshift Enterprise Cluster on Azure, you will need a 
 ## Create the cluster
 ### Create the cluster on the Azure Portal
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fglennswest%2Fazure-openshift%2Fmaster%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fopenshift%2Fopenshift-ansible-contrib%2Fmaster%2Fazure-ansible%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fglennswest%2Fazure-openshift%2Fmaster%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fopenshift%2Fopenshift-ansible-contrib%2Fmaster%2Fazure-ansible%2Fazuredeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 ### Add Additional Nodes
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fglennswest%2Fazure-openshift%2Fmaster%2Fazureexpand.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fopenshift%2Fopenshift-ansible-contrib%2Fmaster%2Fazure-ansible%2Fazureexpand.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
 ### Add Test Single Node
 Single VM Test Machine - Experimental
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fglennswest%2Fazure-openshift%2Fmaster%2Fonenode.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fopenshift%2Fopenshift-ansible-contrib%2Fmaster%2Fazure-ansible%2Fonenode.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
 ### Create the cluster with powershell
 
 ```powershell
-New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/glennswest/azure-openshift/master/azuredeploy.json
+New-AzureRmResourceGroupDeployment -Name <DeploymentName> -ResourceGroupName <RessourceGroupName> -TemplateUri https://raw.githubusercontent.com/openshift/openshift-ansible-contrib/master/azuredeploy.json
 ```
 
 
@@ -47,7 +47,7 @@ SSHPrivate Data - Base64 Encoded id_rsa - cat ~/.ssh/id_rsa | base64 | pbcopy
 | adminUsername  | String       | Username for SSH Login and Openshift Webconsole |
 |  adminPassword | SecureString | Password for the Openshift Webconsole |
 | sshKeyData     | String       | Public SSH Key for the Virtual Machines |
-| masterDnsName  | String       | DNS Prefix for the Openshift Master / Webconsole | 
+| masterDnsName  | String       | DNS Prefix for the Openshift Master / Webconsole |
 | numberOfNodes  | Integer      | Number of Openshift Nodes to create |
 | image | String | Operating System to use. RHEL or CentOs |
 | masterVMSize | String | The size of the Master Virtual Machine |
